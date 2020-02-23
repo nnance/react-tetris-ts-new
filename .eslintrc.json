@@ -1,0 +1,33 @@
+{
+  "extends": [
+    "react-app",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["react", "@typescript-eslint", "prettier"],
+  "rules": {
+    "prettier/prettier": "error",
+    "no-var": "error",
+    "no-param-reassign": "error",
+    "react/prop-types": "off",
+    "@typescript-eslint/no-explicit-any": "error"
+  },
+  "env": {
+    "browser": true,
+    "jasmine": true,
+    "jest": true
+  },
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "detect"
+    }
+  },
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "parser": "@typescript-eslint/parser"
+}
