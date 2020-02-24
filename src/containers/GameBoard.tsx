@@ -1,27 +1,25 @@
 import React from "react";
-import Header from "../components/Header";
 import ThemeStore from "../state/ThemeStore";
+import { drawers } from "../components/blocks/JBlock";
+import { drawBoard } from "../components/drawing";
+import GameBoard from "../components/GameBoard";
 
-export default function GameBoard(): React.ReactElement {
+const updateBoard = drawBoard(20, 10);
+
+export default function GameBoardContainer(): React.ReactElement {
   const handler = (): void => undefined;
   const [theme] = React.useContext(ThemeStore);
-
-  const style: React.CSSProperties = {
-    ...theme,
-    ...{
-      textAlign: "center",
-      height: "100%"
-    }
-  };
+  const [state] = React.useState(updateBoard([]));
 
   return (
-    <div style={style}>
-      <Header
-        startHandler={handler}
-        pauseHandler={handler}
-        resumeHandler={handler}
-        isPaused={true}
-      />
-    </div>
+    <GameBoard
+      theme={theme}
+      startHandler={handler}
+      pauseHandler={handler}
+      resumeHandler={handler}
+      isPaused={true}
+      piece={drawers}
+      board={state}
+    />
   );
 }

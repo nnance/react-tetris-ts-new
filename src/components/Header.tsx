@@ -2,7 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
-type HeaderProps = {
+export type HeaderProps = {
   startHandler: () => void;
   pauseHandler: () => void;
   resumeHandler: () => void;
