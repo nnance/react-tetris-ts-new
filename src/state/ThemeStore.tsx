@@ -19,7 +19,7 @@ type ThemeActions = {
 
 type ThemeStore = [React.CSSProperties, ThemeActions];
 
-export const ThemeStore = React.createContext<ThemeStore>([
+const ThemeStore = React.createContext<ThemeStore>([
   themes.dark,
   {} as ThemeActions
 ]);
@@ -44,3 +44,5 @@ export const ThemeProvider: React.FC = ({ children }) => {
     </ThemeStore.Provider>
   );
 };
+
+export default ThemeStore;

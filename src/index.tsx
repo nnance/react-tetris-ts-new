@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import Router from "./Router";
 import * as serviceWorker from "./serviceWorker";
-import { ThemeProvider } from "./state/theme";
+import { ThemeProvider } from "./state/ThemeStore";
 
 const Index: React.FC = () => {
   return (

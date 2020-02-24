@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { ThemeStore } from "../state/theme";
+import ThemeStore from "../state/ThemeStore";
 
 export default function App(): React.ReactElement {
   return (
