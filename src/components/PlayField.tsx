@@ -1,9 +1,5 @@
 import React from "react";
-import { DrawableGrid, BlockState } from "./drawing";
-
-export type PlayFieldProps = {
-  board: DrawableGrid;
-};
+import { BlockState, drawBoard } from "./drawing";
 
 const Block = {
   width: "20px",
@@ -43,8 +39,12 @@ const getStyle = (block: BlockState, backgroundColor: string): CellStyle =>
       }
     : { style: EmptyBlock, testID: "empty" };
 
-const PlayField: React.FC<PlayFieldProps> = ({ board }) => {
+const updateBoard = drawBoard(20, 10);
+
+const PlayField: React.FC = () => {
   const highlight = getRandomColor();
+  const board = updateBoard([]);
+
   return (
     <div className="col-md-4 col-8">
       <table style={{ margin: "0px auto" }}>

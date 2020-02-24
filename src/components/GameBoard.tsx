@@ -2,16 +2,13 @@ import React from "react";
 import Header, { HeaderProps } from "./Header";
 import StatusSection from "./StatusSection";
 import NextPiece from "./NextPiece";
-import { Piece, drawBoard, BlockState } from "./drawing";
-import PlayField, { PlayFieldProps } from "./PlayField";
+import { Piece } from "./drawing";
+import PlayField from "./PlayField";
 
 type GameBoardProps = {
   theme: React.CSSProperties;
   piece: Piece;
-} & HeaderProps &
-  PlayFieldProps;
-
-const updateBoard = drawBoard(5, 5);
+} & HeaderProps;
 
 export default function GameBoard(props: GameBoardProps): React.ReactElement {
   const style: React.CSSProperties = {
@@ -21,9 +18,6 @@ export default function GameBoard(props: GameBoardProps): React.ReactElement {
       height: "100%"
     }
   };
-
-  const drawer = props.piece[0];
-  const state = updateBoard(drawer(1, 0, BlockState.on));
 
   return (
     <div style={style} className="container-fluid">
@@ -35,8 +29,8 @@ export default function GameBoard(props: GameBoardProps): React.ReactElement {
       />
       <div className="row">
         <StatusSection level={1} lines={0} />
-        <PlayField board={props.board} />
-        <NextPiece grid={state} />
+        <PlayField />
+        <NextPiece piece={props.piece} />
       </div>
     </div>
   );
