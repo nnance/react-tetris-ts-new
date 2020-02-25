@@ -1,5 +1,6 @@
 import React from "react";
 import Header, { HeaderProps } from "./Header";
+import Container from "./Container";
 import StatusSection from "./StatusSection";
 import NextPiece from "./NextPiece";
 import { Piece } from "./drawing";
@@ -11,16 +12,8 @@ type GameBoardProps = {
 } & HeaderProps;
 
 export default function GameBoard(props: GameBoardProps): React.ReactElement {
-  const style: React.CSSProperties = {
-    ...props.theme,
-    ...{
-      textAlign: "center",
-      height: "100%"
-    }
-  };
-
   return (
-    <div style={style} className="container-fluid">
+    <Container theme={props.theme}>
       <Header
         startHandler={props.startHandler}
         pauseHandler={props.pauseHandler}
@@ -32,6 +25,6 @@ export default function GameBoard(props: GameBoardProps): React.ReactElement {
         <PlayField />
         <NextPiece piece={props.piece} />
       </div>
-    </div>
+    </Container>
   );
 }

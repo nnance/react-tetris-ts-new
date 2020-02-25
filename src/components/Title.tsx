@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 const Title: React.FC = ({ children }) => (
-  <div id="header">
+  <div>
     <h3>
       Tetris React
       <a href="https://github.com/nbarkhina/TetrisJS">

@@ -1,4 +1,5 @@
 import React from "react";
+import Container from "./Container";
 import Title from "./Title";
 import PieceGrid from "./PieceGrid";
 import { drawers as IBlock } from "./blocks/IBlock";
@@ -26,17 +27,9 @@ const blocks: BlockTupil[] = [
   ["ZBlock", ZBlock]
 ];
 
-const PieceViewer: React.FC<PieceViewerProps> = props => {
-  const style: React.CSSProperties = {
-    ...props.theme,
-    ...{
-      textAlign: "center",
-      height: "100%"
-    }
-  };
-
+const PieceViewer: React.FC<PieceViewerProps> = ({ theme }) => {
   return (
-    <div style={style} className="container-fluid">
+    <Container theme={theme}>
       <Title />
       <table>
         <tbody>
@@ -52,7 +45,7 @@ const PieceViewer: React.FC<PieceViewerProps> = props => {
           ))}
         </tbody>
       </table>
-    </div>
+    </Container>
   );
 };
 
