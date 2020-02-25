@@ -2,13 +2,15 @@ import React from "react";
 import Container from "./Container";
 import Title from "./Title";
 import PieceGrid from "./PieceGrid";
-import { drawers as IBlock } from "./blocks/IBlock";
-import { drawers as JBlock } from "./blocks/JBlock";
-import { drawers as LBlock } from "./blocks/LBlock";
-import { drawers as OBlock } from "./blocks/OBlock";
-import { drawers as SBlock } from "./blocks/SBlock";
-import { drawers as TBlock } from "./blocks/TBlock";
-import { drawers as ZBlock } from "./blocks/ZBlock";
+import {
+  IBlock,
+  JBlock,
+  LBlock,
+  OBlock,
+  SBlock,
+  TBlock,
+  ZBlock
+} from "./blocks";
 import { Piece } from "./drawing";
 
 type PieceViewerProps = {
