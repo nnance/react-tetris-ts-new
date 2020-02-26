@@ -5,7 +5,8 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier/@typescript-eslint",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:react-hooks"
   ],
   "plugins": ["react", "@typescript-eslint", "prettier"],
   "rules": {
@@ -13,7 +14,9 @@
     "no-var": "error",
     "no-param-reassign": "error",
     "react/prop-types": "off",
-    "@typescript-eslint/no-explicit-any": "error"
+    "@typescript-eslint/no-explicit-any": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   },
   "env": {
     "browser": true,

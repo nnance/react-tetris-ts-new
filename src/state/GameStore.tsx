@@ -1,20 +1,35 @@
 import React from "react";
-import { incrimentScore } from "./gameRules";
+import {
+  incrementScore,
+  startGame,
+  moveDown,
+  pickNewPiece,
+  pieceToBoardPiece
+} from "./gameRules";
+import { DrawableAction, BoardPiece, Piece } from "../components/drawing";
 
 export type GameState = {
+  piece: BoardPiece;
+  next: Piece;
   score: number;
-  lines: number;
+  lineCount: number;
+  lines: DrawableAction[];
   level: number;
 };
 
 const initialState: GameState = {
+  piece: pieceToBoardPiece(pickNewPiece()),
+  next: pickNewPiece(),
   score: 0,
-  lines: 0,
+  lineCount: 0,
+  lines: [],
   level: 1
 };
 
 type GameActions = {
-  incrimentScore: (value: number) => void;
+  incrementScore: (value: number) => void;
+  moveDown: (piece: BoardPiece) => void;
+  startGame: () => void;
 };
 
 type GameStore = [GameState, GameActions];
@@ -27,7 +42,9 @@ const GameStore = React.createContext<GameStore>([
 ]);
 
 const gameActions = (setState: GameStateSetter): GameActions => ({
-  incrimentScore: incrimentScore(setState)
+  incrementScore: incrementScore(setState),
+  startGame: startGame(setState),
+  moveDown: moveDown(setState)
 });
 
 export const GameProvider: React.FC = ({ children }) => {
