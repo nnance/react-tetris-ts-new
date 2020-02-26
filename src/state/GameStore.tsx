@@ -1,4 +1,5 @@
 import React from "react";
+import { incrimentScore } from "./gameRules";
 
 export type GameState = {
   score: number;
@@ -18,16 +19,15 @@ type GameActions = {
 
 type GameStore = [GameState, GameActions];
 
+export type GameStateSetter = React.Dispatch<React.SetStateAction<GameState>>;
+
 const GameStore = React.createContext<GameStore>([
   initialState,
   {} as GameActions
 ]);
 
-const gameActions = (
-  setState: React.Dispatch<React.SetStateAction<GameState>>
-): GameActions => ({
-  incrimentScore: (value): void =>
-    setState(state => ({ ...state, score: state.score + value }))
+const gameActions = (setState: GameStateSetter): GameActions => ({
+  incrimentScore: incrimentScore(setState)
 });
 
 export const GameProvider: React.FC = ({ children }) => {
