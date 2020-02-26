@@ -1,17 +1,19 @@
 import React from "react";
 
-type GameState = {
+export type GameState = {
   score: number;
   lines: number;
+  level: number;
 };
 
 const initialState: GameState = {
   score: 0,
-  lines: 1
+  lines: 0,
+  level: 1
 };
 
 type GameActions = {
-  incrimentScore: (value: number) => void
+  incrimentScore: (value: number) => void;
 };
 
 type GameStore = [GameState, GameActions];
@@ -24,7 +26,8 @@ const GameStore = React.createContext<GameStore>([
 const gameActions = (
   setState: React.Dispatch<React.SetStateAction<GameState>>
 ): GameActions => ({
-  incrimentScore: value => setState(state => ({...state, score: state.score + value}))
+  incrimentScore: (value): void =>
+    setState(state => ({ ...state, score: state.score + value }))
 });
 
 export const GameProvider: React.FC = ({ children }) => {
@@ -32,10 +35,8 @@ export const GameProvider: React.FC = ({ children }) => {
   const actions = gameActions(setState);
 
   return (
-    <GameStore.Provider value={[state, actions]}>
-      {children}
-    </GameStore.Provider>
+    <GameStore.Provider value={[state, actions]}>{children}</GameStore.Provider>
   );
 };
 
-export default ThemeStore;
+export default GameStore;

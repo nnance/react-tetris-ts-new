@@ -5,10 +5,12 @@ import StatusSection from "./StatusSection";
 import NextPiece from "./NextPiece";
 import { Piece } from "./drawing";
 import PlayField from "./PlayField";
+import { GameState } from "../state/GameStore";
 
 type GameBoardProps = {
   theme: React.CSSProperties;
   piece: Piece;
+  game: GameState;
 } & HeaderProps;
 
 export default function GameBoard(props: GameBoardProps): React.ReactElement {
@@ -21,7 +23,7 @@ export default function GameBoard(props: GameBoardProps): React.ReactElement {
         isPaused={props.isPaused}
       />
       <div className="row">
-        <StatusSection level={1} lines={0} />
+        <StatusSection level={props.game.score} lines={props.game.lines} />
         <PlayField />
         <NextPiece piece={props.piece} />
       </div>
