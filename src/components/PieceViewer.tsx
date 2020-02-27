@@ -17,9 +17,9 @@ type PieceViewerProps = {
   theme: React.CSSProperties;
 };
 
-type BlockTupil = [string, Piece];
+type BlockTuple = [string, Piece];
 
-const blocks: BlockTupil[] = [
+const blocks: BlockTuple[] = [
   ["IBlock", IBlock],
   ["JBlock", JBlock],
   ["LBlock", LBlock],

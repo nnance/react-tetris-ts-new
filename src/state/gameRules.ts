@@ -1,4 +1,4 @@
-import { GameStateSetter } from "./GameStore";
+import { GameStateSetter } from "../types";
 import {
   BoardPiece,
   Piece,
@@ -7,11 +7,11 @@ import {
 } from "../components/drawing";
 import { blocks } from "../components/blocks";
 
-const board = drawBoard(20, 10);
+export const updateBoard = drawBoard(20, 10);
 
 const atBottom = (piece: BoardPiece): boolean => {
   const actions = drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
-  return actions.find(action => action.y >= board([]).length - 1) !== undefined;
+  return actions.find(action => action.y >= updateBoard([]).length - 1) !== undefined;
 };
 
 export const pieceToBoardPiece = (piece: Piece): BoardPiece => ({

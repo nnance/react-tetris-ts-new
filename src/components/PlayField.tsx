@@ -1,5 +1,6 @@
 import React from "react";
-import { BlockState, drawBoard, BoardPiece, drawBlock } from "./drawing";
+import { BlockState, BoardPiece, drawBlock } from "./drawing";
+import { updateBoard } from "../state/gameRules";
 
 type PlayFieldProps = {
   piece: BoardPiece;
@@ -42,8 +43,6 @@ const getStyle = (block: BlockState, backgroundColor: string): CellStyle =>
         testID: "highlight"
       }
     : { style: EmptyBlock, testID: "empty" };
-
-const updateBoard = drawBoard(20, 10);
 
 const PlayField: React.FC<PlayFieldProps> = ({ piece }) => {
   const highlight = getRandomColor();
