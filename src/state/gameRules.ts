@@ -1,6 +1,18 @@
 import { GameStateSetter } from "./GameStore";
-import { BoardPiece, Piece } from "../components/drawing";
+import {
+  BoardPiece,
+  Piece,
+  drawBlock,
+  drawBoard,
+} from "../components/drawing";
 import { blocks } from "../components/blocks";
+
+const board = drawBoard(20, 10);
+
+const atBottom = (piece: BoardPiece): boolean => {
+  const actions = drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
+  return actions.find(action => action.y >= board([]).length - 1) !== undefined;
+};
 
 export const pieceToBoardPiece = (piece: Piece): BoardPiece => ({
   pos: { x: 1, y: 0 },
@@ -19,13 +31,15 @@ export const incrementScore = (setState: GameStateSetter) => (
 ): void => setState(state => ({ ...state, score: state.score + value }));
 
 export const moveDown = (setState: GameStateSetter) => (): void => {
-  setState(state => ({
-    ...state,
-    piece: {
-      ...state.piece,
-      pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
-    }
-  }));
+  setState(state => {
+    return atBottom(state.piece) ? state : {
+      ...state,
+      piece: {
+        ...state.piece,
+        pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
+      }
+    };
+  });
 };
 
 export const startGame = (setState: GameStateSetter) => (): void => {
