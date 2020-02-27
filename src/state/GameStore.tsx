@@ -8,16 +8,7 @@ import {
   pieceToBoardPiece,
   resumeGame
 } from "./gameRules";
-import { BoardPiece, Piece } from "../components/drawing";
-
-export type GameState = {
-  piece: BoardPiece;
-  next: Piece;
-  score: number;
-  lineCount: number;
-  level: number;
-  paused: boolean;
-};
+import { GameState, GameActions, GameStateSetter } from "../types";
 
 const initialState: GameState = {
   piece: pieceToBoardPiece(pickNewPiece()),
@@ -28,17 +19,7 @@ const initialState: GameState = {
   paused: true,
 };
 
-type GameActions = {
-  incrementScore: (value: number) => void;
-  moveDown: () => void;
-  pauseGame: () => void;
-  resumeGame: () => void;
-  startGame: () => void;
-};
-
 type GameStore = [GameState, GameActions];
-
-export type GameStateSetter = React.Dispatch<React.SetStateAction<GameState>>;
 
 const GameStore = React.createContext<GameStore>([
   initialState,

@@ -5,7 +5,7 @@ import StatusSection from "./StatusSection";
 import NextPiece from "./NextPiece";
 import { Piece } from "./drawing";
 import PlayField from "./PlayField";
-import { GameState } from "../state/GameStore";
+import { GameState } from "../types";
 
 type GameBoardProps = {
   theme: React.CSSProperties;
