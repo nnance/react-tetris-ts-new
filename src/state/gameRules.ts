@@ -45,7 +45,8 @@ export const moveDown = (setState: GameStateSetter) => (): void => {
 export const startGame = (setState: GameStateSetter) => (): void => {
   setState(state => ({
     ...state,
-    paused: false
+    paused: false,
+    started: true
   }));
   setInterval(
     () =>

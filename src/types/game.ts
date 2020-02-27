@@ -8,6 +8,7 @@ export type GameState = {
   lineCount: number;
   level: number;
   paused: boolean;
+  started: boolean;
 };
 
 export type GameActions = {

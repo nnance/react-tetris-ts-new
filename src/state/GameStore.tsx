@@ -17,6 +17,7 @@ const initialState: GameState = {
   lineCount: 0,
   level: 1,
   paused: true,
+  started: false
 };
 
 type GameStore = [GameState, GameActions];

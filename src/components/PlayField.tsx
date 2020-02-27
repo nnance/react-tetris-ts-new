@@ -3,6 +3,7 @@ import { BlockState, BoardPiece, drawBlock } from "./drawing";
 import { updateBoard } from "../state/gameRules";
 
 type PlayFieldProps = {
+  started: boolean;
   piece: BoardPiece;
 };
 
@@ -44,9 +45,9 @@ const getStyle = (block: BlockState, backgroundColor: string): CellStyle =>
       }
     : { style: EmptyBlock, testID: "empty" };
 
-const PlayField: React.FC<PlayFieldProps> = ({ piece }) => {
+const PlayField: React.FC<PlayFieldProps> = ({ piece, started }) => {
   const highlight = getRandomColor();
-  const lines = drawBlock(piece.pos.x, piece.pos.y, piece.drawer)
+  const lines = !started ? [] : drawBlock(piece.pos.x, piece.pos.y, piece.drawer)
   const board = updateBoard(lines);
 
   return (
