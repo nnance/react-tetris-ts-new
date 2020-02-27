@@ -5,7 +5,6 @@ import { drawers } from "../components/blocks/JBlock";
 import GameBoard from "../components/GameBoard";
 
 export default function GameBoardContainer(): React.ReactElement {
-  const handler = (): void => undefined;
   const [theme] = React.useContext(ThemeStore);
 
   return (
@@ -16,7 +15,7 @@ export default function GameBoardContainer(): React.ReactElement {
             theme={theme}
             startHandler={actions.startGame}
             pauseHandler={actions.pauseGame}
-            resumeHandler={handler}
+            resumeHandler={actions.resumeGame}
             isPaused={true}
             piece={drawers}
             game={game}
