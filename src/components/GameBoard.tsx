@@ -24,7 +24,7 @@ export default function GameBoard(props: GameBoardProps): React.ReactElement {
       />
       <div className="row">
         <StatusSection level={props.game.score} lines={props.game.lineCount} />
-        <PlayField lines={props.game.lines} />
+        <PlayField piece={props.game.piece} />
         <NextPiece piece={props.piece} />
       </div>
     </Container>

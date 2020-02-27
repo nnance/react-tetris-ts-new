@@ -5,16 +5,16 @@ import {
   moveDown,
   pauseGame,
   pickNewPiece,
-  pieceToBoardPiece
+  pieceToBoardPiece,
+  resumeGame
 } from "./gameRules";
-import { DrawableAction, BoardPiece, Piece } from "../components/drawing";
+import { BoardPiece, Piece } from "../components/drawing";
 
 export type GameState = {
   piece: BoardPiece;
   next: Piece;
   score: number;
   lineCount: number;
-  lines: DrawableAction[];
   level: number;
   paused: boolean;
 };
@@ -24,7 +24,6 @@ const initialState: GameState = {
   next: pickNewPiece(),
   score: 0,
   lineCount: 0,
-  lines: [],
   level: 1,
   paused: true,
 };
@@ -33,6 +32,7 @@ type GameActions = {
   incrementScore: (value: number) => void;
   moveDown: () => void;
   pauseGame: () => void;
+  resumeGame: () => void;
   startGame: () => void;
 };
 
@@ -49,6 +49,7 @@ const gameActions = (setState: GameStateSetter): GameActions => ({
   incrementScore: incrementScore(setState),
   startGame: startGame(setState),
   pauseGame: pauseGame(setState),
+  resumeGame: resumeGame(setState),
   moveDown: moveDown(setState)
 });
 
