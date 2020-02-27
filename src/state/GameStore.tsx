@@ -3,6 +3,7 @@ import {
   incrementScore,
   startGame,
   moveDown,
+  pauseGame,
   pickNewPiece,
   pieceToBoardPiece
 } from "./gameRules";
@@ -15,6 +16,7 @@ export type GameState = {
   lineCount: number;
   lines: DrawableAction[];
   level: number;
+  paused: boolean;
 };
 
 const initialState: GameState = {
@@ -23,12 +25,14 @@ const initialState: GameState = {
   score: 0,
   lineCount: 0,
   lines: [],
-  level: 1
+  level: 1,
+  paused: true,
 };
 
 type GameActions = {
   incrementScore: (value: number) => void;
-  moveDown: (piece: BoardPiece) => void;
+  moveDown: () => void;
+  pauseGame: () => void;
   startGame: () => void;
 };
 
@@ -44,6 +48,7 @@ const GameStore = React.createContext<GameStore>([
 const gameActions = (setState: GameStateSetter): GameActions => ({
   incrementScore: incrementScore(setState),
   startGame: startGame(setState),
+  pauseGame: pauseGame(setState),
   moveDown: moveDown(setState)
 });
 

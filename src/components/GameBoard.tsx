@@ -20,7 +20,7 @@ export default function GameBoard(props: GameBoardProps): React.ReactElement {
         startHandler={props.startHandler}
         pauseHandler={props.pauseHandler}
         resumeHandler={props.resumeHandler}
-        isPaused={props.isPaused}
+        isPaused={props.game.paused}
       />
       <div className="row">
         <StatusSection level={props.game.score} lines={props.game.lineCount} />
