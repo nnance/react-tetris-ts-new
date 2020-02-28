@@ -5,17 +5,25 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import Router from "./Router";
 import * as serviceWorker from "./serviceWorker";
-import { ThemeProvider } from "./state/ThemeStore";
+import ThemeStore, { ThemeProvider } from "./state/ThemeStore";
 
 const Index: React.FC = () => {
-  return (
-    <ThemeProvider>
-      <Router />
-    </ThemeProvider>
-  );
+  const [theme] = React.useContext(ThemeStore);
+
+  React.useEffect(() => {
+    document.body.style.backgroundColor = theme.backgroundColor!;
+    document.body.style.color = theme.color!;
+  }, [theme]);
+
+  return <Router />;
 };
 
-ReactDOM.render(<Index />, document.getElementById("root"));
+ReactDOM.render(
+  <ThemeProvider>
+    <Index />
+  </ThemeProvider>,
+  document.getElementById("root")
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
