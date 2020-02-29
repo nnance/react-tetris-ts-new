@@ -1,15 +1,6 @@
 import React from "react";
-import {
-  incrementScore,
-  startGame,
-  moveDown,
-  pauseGame,
-  pickNewPiece,
-  pieceToBoardPiece,
-  resumeGame,
-  moveRight
-} from "./gameRules";
-import { GameState, GameActions, GameStateSetter } from "../types";
+import { pickNewPiece, pieceToBoardPiece, gameActions } from "./GameActions";
+import { GameState, GameActions } from "../types";
 
 const initialState: GameState = {
   piece: pieceToBoardPiece(pickNewPiece()),
@@ -27,15 +18,6 @@ const GameStore = React.createContext<GameStore>([
   initialState,
   {} as GameActions
 ]);
-
-const gameActions = (setState: GameStateSetter): GameActions => ({
-  incrementScore: incrementScore(setState),
-  startGame: startGame(setState),
-  pauseGame: pauseGame(setState),
-  resumeGame: resumeGame(setState),
-  moveDown: moveDown(setState),
-  moveRight: moveRight(setState)
-});
 
 export const GameProvider: React.FC = ({ children }) => {
   const [state, setState] = React.useState(initialState);

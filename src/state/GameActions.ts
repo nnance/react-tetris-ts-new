@@ -1,4 +1,4 @@
-import { GameStateSetter } from "../types";
+import { GameStateSetter, GameActions } from "../types";
 import { BoardPiece, Piece, drawBlock, drawBoard } from "../components/drawing";
 import { blocks } from "../components/blocks";
 
@@ -23,11 +23,10 @@ export const pickNewPiece = (): Piece => {
   return blocks[pieceIndex];
 };
 
-export const incrementScore = (setState: GameStateSetter) => (
-  value: number
-): void => setState(state => ({ ...state, score: state.score + value }));
+const incrementScore = (setState: GameStateSetter) => (value: number): void =>
+  setState(state => ({ ...state, score: state.score + value }));
 
-export const moveDown = (setState: GameStateSetter) => (): void => {
+const moveDown = (setState: GameStateSetter) => (): void => {
   setState(state =>
     atBottom(state.piece)
       ? state
@@ -41,7 +40,7 @@ export const moveDown = (setState: GameStateSetter) => (): void => {
   );
 };
 
-export const startGame = (setState: GameStateSetter) => (): void => {
+const startGame = (setState: GameStateSetter) => (): void => {
   setState(state => ({
     ...state,
     paused: false,
@@ -57,19 +56,19 @@ export const startGame = (setState: GameStateSetter) => (): void => {
   );
 };
 
-export const pauseGame = (setState: GameStateSetter) => (): void =>
+const pauseGame = (setState: GameStateSetter) => (): void =>
   setState(state => ({
     ...state,
     paused: true
   }));
 
-export const resumeGame = (setState: GameStateSetter) => (): void =>
+const resumeGame = (setState: GameStateSetter) => (): void =>
   setState(state => ({
     ...state,
     paused: false
   }));
 
-export const moveRight = (setState: GameStateSetter) => (): void =>
+const moveRight = (setState: GameStateSetter) => (): void =>
   setState(state => ({
     ...state,
     piece: {
@@ -77,3 +76,12 @@ export const moveRight = (setState: GameStateSetter) => (): void =>
       pos: { ...state.piece.pos, x: ++state.piece.pos.x }
     }
   }));
+
+export const gameActions = (setState: GameStateSetter): GameActions => ({
+  incrementScore: incrementScore(setState),
+  startGame: startGame(setState),
+  pauseGame: pauseGame(setState),
+  resumeGame: resumeGame(setState),
+  moveDown: moveDown(setState),
+  moveRight: moveRight(setState)
+});

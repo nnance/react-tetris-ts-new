@@ -1,6 +1,6 @@
 import React from "react";
 import { BlockState, BoardPiece, drawBlock } from "./drawing";
-import { updateBoard } from "../state/gameRules";
+import { updateBoard } from "../state/GameActions";
 
 type PlayFieldProps = {
   started: boolean;
