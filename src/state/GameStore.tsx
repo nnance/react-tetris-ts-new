@@ -6,7 +6,8 @@ import {
   pauseGame,
   pickNewPiece,
   pieceToBoardPiece,
-  resumeGame
+  resumeGame,
+  moveRight
 } from "./gameRules";
 import { GameState, GameActions, GameStateSetter } from "../types";
 
@@ -32,7 +33,8 @@ const gameActions = (setState: GameStateSetter): GameActions => ({
   startGame: startGame(setState),
   pauseGame: pauseGame(setState),
   resumeGame: resumeGame(setState),
-  moveDown: moveDown(setState)
+  moveDown: moveDown(setState),
+  moveRight: moveRight(setState)
 });
 
 export const GameProvider: React.FC = ({ children }) => {

@@ -3,10 +3,23 @@ import GameStore, { GameProvider } from "../state/GameStore";
 import { drawers } from "../components/blocks/JBlock";
 import Container from "../components/Container";
 import Header from "../components/Header";
-import StatusSection from "./StatusSection";
+import StatusSection from "../components/StatusSection";
 import PlayField from "../components/PlayField";
 import NextPiece from "../components/NextPiece";
 import useTheme from "../hooks/useTheme";
+import useGameControls from "../hooks/useGameControls";
+
+const PlayFieldContainer: React.FC = () => {
+  const [game] = React.useContext(GameStore);
+  useGameControls();
+  return <PlayField piece={game.piece} started={game.started} />;
+};
+
+const StatusContainer: React.FC = () => {
+  const [game] = React.useContext(GameStore);
+  // const fps = useFPS();
+  return <StatusSection fps={60} level={game.score} lines={game.lineCount} />;
+};
 
 export default function GameBoardContainer(): React.ReactElement {
   const theme = useTheme();
@@ -23,8 +36,8 @@ export default function GameBoardContainer(): React.ReactElement {
               isPaused={game.paused}
             />
             <div className="row">
-              <StatusSection />
-              <PlayField piece={game.piece} started={game.started} />
+              <StatusContainer />
+              <PlayFieldContainer />
               <NextPiece piece={drawers} />
             </div>
           </Container>

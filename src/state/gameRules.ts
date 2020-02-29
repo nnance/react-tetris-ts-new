@@ -28,17 +28,17 @@ export const incrementScore = (setState: GameStateSetter) => (
 ): void => setState(state => ({ ...state, score: state.score + value }));
 
 export const moveDown = (setState: GameStateSetter) => (): void => {
-  setState(state => {
-    return atBottom(state.piece)
+  setState(state =>
+    atBottom(state.piece)
       ? state
       : {
           ...state,
           piece: {
             ...state.piece,
-            pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
+            pos: { ...state.piece.pos, y: ++state.piece.pos.y }
           }
-        };
-  });
+        }
+  );
 };
 
 export const startGame = (setState: GameStateSetter) => (): void => {
@@ -67,4 +67,13 @@ export const resumeGame = (setState: GameStateSetter) => (): void =>
   setState(state => ({
     ...state,
     paused: false
+  }));
+
+export const moveRight = (setState: GameStateSetter) => (): void =>
+  setState(state => ({
+    ...state,
+    piece: {
+      ...state.piece,
+      pos: { ...state.piece.pos, x: ++state.piece.pos.x }
+    }
   }));

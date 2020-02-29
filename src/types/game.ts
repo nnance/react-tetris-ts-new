@@ -13,10 +13,11 @@ export type GameState = {
 
 export type GameActions = {
   incrementScore: (value: number) => void;
-  moveDown: () => void;
   pauseGame: () => void;
   resumeGame: () => void;
   startGame: () => void;
+  moveDown: () => void;
+  moveRight: () => void;
 };
 
 export type GameStateSetter = React.Dispatch<React.SetStateAction<GameState>>;
