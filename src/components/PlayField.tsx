@@ -47,7 +47,9 @@ const getStyle = (block: BlockState, backgroundColor: string): CellStyle =>
 
 const PlayField: React.FC<PlayFieldProps> = ({ piece, started }) => {
   const highlight = getRandomColor();
-  const lines = !started ? [] : drawBlock(piece.pos.x, piece.pos.y, piece.drawer)
+  const lines = !started
+    ? []
+    : drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
   const board = updateBoard(lines);
 
   return (

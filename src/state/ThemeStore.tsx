@@ -11,10 +11,9 @@ const themes = {
   } as React.CSSProperties
 };
 
-type ThemeToggle = () => void;
-
 type ThemeActions = {
-  toggle: ThemeToggle;
+  toggle: () => void;
+  setTheme: (theme: string) => void;
 };
 
 type ThemeStore = [React.CSSProperties, ThemeActions];
@@ -30,6 +29,11 @@ const themeActions = (
   toggle: (): void => {
     setState(prevState =>
       prevState === themes.dark ? themes.light : themes.dark
+    );
+  },
+  setTheme: (theme): void => {
+    setState(state =>
+      theme === "dark" ? themes.dark : theme === "light" ? themes.light : state
     );
   }
 });

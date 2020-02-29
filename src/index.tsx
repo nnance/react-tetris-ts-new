@@ -1,26 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import Router from "./Router";
 import * as serviceWorker from "./serviceWorker";
-import ThemeStore, { ThemeProvider } from "./state/ThemeStore";
-
-const Index: React.FC = () => {
-  const [theme] = React.useContext(ThemeStore);
-
-  React.useEffect(() => {
-    document.body.style.backgroundColor = theme.backgroundColor!;
-    document.body.style.color = theme.color!;
-  }, [theme]);
-
-  return <Router />;
-};
+import { ThemeProvider } from "./state/ThemeStore";
 
 ReactDOM.render(
   <ThemeProvider>
-    <Index />
+    <Router />
   </ThemeProvider>,
   document.getElementById("root")
 );
