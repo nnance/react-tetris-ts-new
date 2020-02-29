@@ -2,8 +2,10 @@ import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import ThemeStore from "../state/ThemeStore";
+import useTheme from "../hooks/useTheme";
 
-export default function App(): React.ReactElement {
+const App: React.FC = () => {
+  useTheme();
   return (
     <ThemeStore.Consumer>
       {([theme]): React.ReactElement => (
@@ -26,4 +28,6 @@ export default function App(): React.ReactElement {
       )}
     </ThemeStore.Consumer>
   );
-}
+};
+
+export default App;

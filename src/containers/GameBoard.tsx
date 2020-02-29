@@ -1,5 +1,4 @@
 import React from "react";
-import ThemeStore from "../state/ThemeStore";
 import GameStore, { GameProvider } from "../state/GameStore";
 import { drawers } from "../components/blocks/JBlock";
 import Container from "../components/Container";
@@ -7,9 +6,10 @@ import Header from "../components/Header";
 import StatusSection from "./StatusSection";
 import PlayField from "../components/PlayField";
 import NextPiece from "../components/NextPiece";
+import useTheme from "../hooks/useTheme";
 
 export default function GameBoardContainer(): React.ReactElement {
-  const [theme] = React.useContext(ThemeStore);
+  const theme = useTheme();
 
   return (
     <GameProvider>

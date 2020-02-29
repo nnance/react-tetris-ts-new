@@ -1,13 +1,14 @@
 import React from "react";
 import ThemeStore from "../state/ThemeStore";
-import { RouteComponentProps } from "react-router-dom";
 import { parse } from "query-string";
+import { useHistory } from "react-router-dom";
 
-const ThemedContainer: React.FC<RouteComponentProps> = ({
-  children,
-  location
-}) => {
+const useTheme = (): React.CSSProperties => {
   const [theme, setTheme] = React.useContext(ThemeStore);
+  const { location } = useHistory();
+
+  const params = parse(location.search);
+  setTheme.setTheme(params.theme as string);
 
   React.useEffect(() => {
     document.body.style.backgroundColor =
@@ -15,12 +16,7 @@ const ThemedContainer: React.FC<RouteComponentProps> = ({
     document.body.style.color = theme.color || document.body.style.color;
   }, [theme]);
 
-  React.useEffect(() => {
-    const params = parse(location.search);
-    setTheme.setTheme(params.theme as string);
-  });
-
-  return <div>{children}</div>;
+  return theme;
 };
 
-export default ThemedContainer;
+export default useTheme;

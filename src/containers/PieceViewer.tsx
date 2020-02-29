@@ -1,9 +1,9 @@
 import React from "react";
 import PieceViewer from "../components/PieceViewer";
-import ThemeStore from "../state/ThemeStore";
+import useTheme from "../hooks/useTheme";
 
 const PieceViewerContainer: React.FC = () => {
-  const [theme] = React.useContext(ThemeStore);
+  const theme = useTheme();
 
   return <PieceViewer theme={theme} />;
 };
