@@ -1,5 +1,12 @@
 import { GameStateSetter, GameActions } from "../types";
-import { BoardPiece, Piece, drawBlock, drawBoard } from "../components/drawing";
+import {
+  BoardPiece,
+  Piece,
+  drawBlock,
+  drawBoard,
+  BlockDrawer,
+  DrawableGrid
+} from "../components/drawing";
 import { blocks } from "../components/blocks";
 
 export const updateBoard = drawBoard(20, 10);
@@ -25,6 +32,24 @@ export const pickNewPiece = (): Piece => {
 
 const incrementScore = (setState: GameStateSetter) => (value: number): void =>
   setState(state => ({ ...state, score: state.score + value }));
+
+const getNewDrawer = (boarPiece: BoardPiece): BlockDrawer => {
+  const idx = boarPiece.piece.findIndex(drawer => drawer === boarPiece.drawer);
+  return boarPiece.piece[idx === boarPiece.piece.length - 1 ? 0 : idx + 1];
+};
+
+const rotationBlocked = (piece: BoardPiece, board: DrawableGrid): boolean => {
+  const drawer = getNewDrawer(piece);
+  const actions = drawBlock(piece.pos.x, piece.pos.y, drawer);
+  return actions.find(action => action.x >= board[0].length) !== undefined;
+};
+
+const rotatePiece = (setState: GameStateSetter) => (): void => {
+  setState(state => {
+    const drawer = getNewDrawer(state.piece);
+    return { ...state, piece: { ...state.piece, drawer } };
+  });
+};
 
 const moveDown = (setState: GameStateSetter) => (): void => {
   setState(state =>
@@ -77,11 +102,22 @@ const moveRight = (setState: GameStateSetter) => (): void =>
     }
   }));
 
+const moveLeft = (setState: GameStateSetter) => (): void =>
+  setState(state => ({
+    ...state,
+    piece: {
+      ...state.piece,
+      pos: { ...state.piece.pos, x: --state.piece.pos.x }
+    }
+  }));
+
 export const gameActions = (setState: GameStateSetter): GameActions => ({
   incrementScore: incrementScore(setState),
   startGame: startGame(setState),
   pauseGame: pauseGame(setState),
   resumeGame: resumeGame(setState),
   moveDown: moveDown(setState),
-  moveRight: moveRight(setState)
+  moveRight: moveRight(setState),
+  moveLeft: moveLeft(setState),
+  rotatePiece: rotatePiece(setState)
 });

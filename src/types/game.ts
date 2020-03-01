@@ -18,6 +18,8 @@ export type GameActions = {
   startGame: () => void;
   moveDown: () => void;
   moveRight: () => void;
+  moveLeft: () => void;
+  rotatePiece: () => void;
 };
 
 export type GameStateSetter = React.Dispatch<React.SetStateAction<GameState>>;
