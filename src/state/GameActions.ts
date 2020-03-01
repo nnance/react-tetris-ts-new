@@ -12,30 +12,56 @@ import { blocks } from "../components/blocks";
 
 export const updateBoard = drawBoard(20, 10);
 
-const atBottom = (piece: BoardPiece): boolean => {
-  const actions = drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
-  return (
-    actions.find(action => action.y >= updateBoard([]).length - 1) !== undefined
-  );
-};
+const drawPiece = (piece: BoardPiece): DrawableAction[] =>
+  drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
 
-const atLeft = (piece: BoardPiece): boolean => {
-  const actions = drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
-  return actions.find(action => action.x === 0) !== undefined;
-};
+type BoundaryPredicate = (action: DrawableAction) => boolean;
+
+const checkBoundary = (
+  piece: BoardPiece,
+  predicate: BoundaryPredicate
+): boolean => drawPiece(piece).find(predicate) !== undefined;
+
+const atBottom = (piece: BoardPiece): boolean =>
+  checkBoundary(piece, action => action.y >= updateBoard([]).length - 1);
+
+const atLeft = (piece: BoardPiece): boolean =>
+  checkBoundary(piece, action => action.x === 0);
 
 const atRight = (piece: BoardPiece): boolean => {
   const board = updateBoard([]);
-  const actions = drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
-  return actions.find(action => action.x >= board[0].length - 1) !== undefined;
+  return checkBoundary(piece, action => action.x >= board[0].length - 1);
 };
 
-const didCollide = (actions: DrawableAction[], game: GameState): boolean => {
+const didCollide = (piece: BoardPiece, game: GameState): boolean => {
   const newBoard = updateBoard(game.lines);
-  const collisions = actions.find(
+  return checkBoundary(
+    piece,
     action => newBoard[action.y][action.x] === BlockState.on
   );
-  return collisions !== undefined;
+};
+
+const findFullRows = (actions: DrawableAction[]): number[] =>
+  actions
+    .reduce((prev, cur) => {
+      prev[cur.y] += 1;
+      return prev;
+    }, Array(20).fill(0))
+    .reduce(
+      (prev, row, index) => (row === 10 ? prev.concat([index]) : prev),
+      [] as number[]
+    );
+
+const highlightLines = (actions: DrawableAction[]): DrawableAction[] => {
+  const rowCounts = findFullRows(actions);
+  return actions.reduce((prev, action) => {
+    const newAction = rowCounts.reduce(
+      (prev, row) =>
+        prev.y === row ? { ...prev, state: BlockState.highlight } : prev,
+      { ...action }
+    );
+    return prev.concat(newAction);
+  }, [] as DrawableAction[]);
 };
 
 export const pieceToBoardPiece = (piece: Piece): BoardPiece => ({
@@ -44,10 +70,6 @@ export const pieceToBoardPiece = (piece: Piece): BoardPiece => ({
   isAtBottom: false,
   drawer: piece[0]
 });
-
-const drawPiece = (state: GameState): DrawableAction[] => {
-  return drawBlock(state.piece.pos.x, state.piece.pos.y, state.piece.drawer);
-};
 
 export const pickNewPiece = (): Piece => {
   const pieceIndex = Math.floor(Math.random() * blocks.length);
@@ -63,10 +85,9 @@ const getNewDrawer = (boarPiece: BoardPiece): BlockDrawer => {
 };
 
 const rotationBlocked = (piece: BoardPiece): boolean => {
-  const drawer = getNewDrawer(piece);
+  const newPiece = { ...piece, drawer: getNewDrawer(piece) };
   const board = updateBoard([]);
-  const actions = drawBlock(piece.pos.x, piece.pos.y, drawer);
-  return actions.find(action => action.x >= board[0].length) !== undefined;
+  return checkBoundary(newPiece, action => action.x >= board[0].length);
 };
 
 const rotatePiece = (setState: GameStateSetter) => (): void => {
@@ -84,9 +105,7 @@ const endPieceMovement = (state: GameState): GameState => ({
   ...state,
   piece: pieceToBoardPiece(state.next),
   next: pickNewPiece(),
-  lines: state.lines.concat(
-    drawBlock(state.piece.pos.x, state.piece.pos.y, state.piece.drawer)
-  )
+  lines: state.lines.concat(drawPiece(state.piece))
 });
 
 const moveDown = (setState: GameStateSetter) => (): void => {
@@ -99,7 +118,9 @@ const moveDown = (setState: GameStateSetter) => (): void => {
       }
     };
 
-    return atBottom(state.piece) || didCollide(drawPiece(newState), state)
+    return findFullRows(state.lines).length > 0
+      ? { ...state, lines: highlightLines(state.lines) }
+      : atBottom(state.piece) || didCollide(newState.piece, state)
       ? endPieceMovement(state)
       : !state.paused
       ? newState
@@ -138,7 +159,7 @@ const moveRight = (setState: GameStateSetter) => (): void =>
       }
     };
 
-    return atRight(state.piece) || didCollide(drawPiece(newState), state)
+    return atRight(state.piece) || didCollide(newState.piece, state)
       ? state
       : newState;
   });
@@ -153,7 +174,7 @@ const moveLeft = (setState: GameStateSetter) => (): void =>
       }
     };
 
-    return atLeft(state.piece) || didCollide(drawPiece(newState), state)
+    return atLeft(state.piece) || didCollide(newState.piece, state)
       ? state
       : newState;
   });
