@@ -1,6 +1,5 @@
 import React from "react";
 import GameStore, { GameProvider } from "../state/GameStore";
-import { drawers } from "../components/blocks/JBlock";
 import Container from "../components/Container";
 import Header from "../components/Header";
 import StatusSection from "../components/StatusSection";
@@ -45,7 +44,7 @@ export default function GameBoardContainer(): React.ReactElement {
             <div className="row">
               <StatusContainer />
               <PlayFieldContainer />
-              <NextPiece piece={drawers} />
+              <NextPiece piece={game.next} />
             </div>
           </Container>
         )}
