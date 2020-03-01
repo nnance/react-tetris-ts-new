@@ -10,7 +10,9 @@ const initialState: GameState = {
   level: 1,
   paused: true,
   started: false,
-  lines: []
+  lines: [],
+  tetrisLines: [],
+  tetrisCycle: 0
 };
 
 type GameStore = [GameState, GameActions];

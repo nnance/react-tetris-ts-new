@@ -52,16 +52,30 @@ const findFullRows = (actions: DrawableAction[]): number[] =>
       [] as number[]
     );
 
-const highlightLines = (actions: DrawableAction[]): DrawableAction[] => {
-  const rowCounts = findFullRows(actions);
-  return actions.reduce((prev, action) => {
-    const newAction = rowCounts.reduce(
+const highlightLines = (
+  fullRows: number[],
+  actions: DrawableAction[]
+): DrawableAction[] =>
+  actions.reduce((prev, action) => {
+    const newAction = fullRows.reduce(
       (prev, row) =>
         prev.y === row ? { ...prev, state: BlockState.highlight } : prev,
       { ...action }
     );
     return prev.concat(newAction);
   }, [] as DrawableAction[]);
+
+const eraseLines = (
+  fullRows: number[],
+  actions: DrawableAction[]
+): DrawableAction[] => {
+  return actions
+    .reduce(
+      (prev, action) =>
+        fullRows.find(row => row === action.y) ? prev : prev.concat(action),
+      [] as DrawableAction[]
+    )
+    .map(action => ({ ...action, y: action.y + fullRows.length }));
 };
 
 export const pieceToBoardPiece = (piece: Piece): BoardPiece => ({
@@ -101,12 +115,23 @@ const rotatePiece = (setState: GameStateSetter) => (): void => {
   );
 };
 
-const endPieceMovement = (state: GameState): GameState => ({
-  ...state,
-  piece: pieceToBoardPiece(state.next),
-  next: pickNewPiece(),
-  lines: state.lines.concat(drawPiece(state.piece))
-});
+const endPieceMovement = (state: GameState): GameState => {
+  const lines = state.lines.concat(drawPiece(state.piece));
+  const fullRows = findFullRows(lines);
+  return fullRows.length > 0
+    ? {
+        ...state,
+        lines: highlightLines(fullRows, lines),
+        tetrisLines: fullRows,
+        tetrisCycle: 3
+      }
+    : {
+        ...state,
+        piece: pieceToBoardPiece(state.next),
+        next: pickNewPiece(),
+        lines
+      };
+};
 
 const moveDown = (setState: GameStateSetter) => (): void => {
   setState(state => {
@@ -118,8 +143,21 @@ const moveDown = (setState: GameStateSetter) => (): void => {
       }
     };
 
-    return findFullRows(state.lines).length > 0
-      ? { ...state, lines: highlightLines(state.lines) }
+    return state.tetrisLines.length > 0 && state.tetrisCycle > 0
+      ? {
+          ...state,
+          lines: highlightLines(state.tetrisLines, state.lines),
+          tetrisCycle: state.tetrisCycle - 1
+        }
+      : state.tetrisLines.length > 0
+      ? {
+          ...state,
+          tetrisLines: [],
+          lineCount: state.lineCount + state.tetrisLines.length,
+          lines: eraseLines(state.tetrisLines, state.lines),
+          piece: pieceToBoardPiece(state.next),
+          next: pickNewPiece()
+        }
       : atBottom(state.piece) || didCollide(newState.piece, state)
       ? endPieceMovement(state)
       : !state.paused

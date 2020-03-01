@@ -9,6 +9,8 @@ export type GameState = {
   level: number;
   paused: boolean;
   started: boolean;
+  tetrisLines: number[];
+  tetrisCycle: number;
   lines: DrawableAction[];
 };
 
