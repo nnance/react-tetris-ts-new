@@ -1,5 +1,5 @@
 import React from "react";
-import { BoardPiece, Piece } from "../components/drawing";
+import { BoardPiece, Piece, DrawableAction } from "../components/drawing";
 
 export type GameState = {
   piece: BoardPiece;
@@ -9,6 +9,7 @@ export type GameState = {
   level: number;
   paused: boolean;
   started: boolean;
+  lines: DrawableAction[];
 };
 
 export type GameActions = {

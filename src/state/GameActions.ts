@@ -1,4 +1,4 @@
-import { GameStateSetter, GameActions } from "../types";
+import { GameStateSetter, GameActions, GameState } from "../types";
 import {
   BoardPiece,
   Piece,
@@ -55,28 +55,42 @@ const rotatePiece = (setState: GameStateSetter) => (): void => {
   });
 };
 
+const incrementPieceY = (state: GameState): GameState => ({
+  ...state,
+  piece: {
+    ...state.piece,
+    pos: { ...state.piece.pos, y: ++state.piece.pos.y }
+  }
+});
+
 const moveDown = (setState: GameStateSetter) => (): void => {
   setState(state =>
-    atBottom(state.piece) || state.paused
-      ? state
-      : {
-          ...state,
-          piece: {
-            ...state.piece,
-            pos: { ...state.piece.pos, y: ++state.piece.pos.y }
-          }
-        }
+    atBottom(state.piece) || state.paused ? state : incrementPieceY(state)
   );
 };
 
+const nextStep = (setState: GameStateSetter) => (): void => {
+  setState(state => {
+    if (atBottom(state.piece)) {
+      return {
+        ...state,
+        piece: pieceToBoardPiece(state.next),
+        lines: state.lines.concat(
+          drawBlock(state.piece.pos.x, state.piece.pos.y, state.piece.drawer)
+        )
+      };
+    }
+    return incrementPieceY(state);
+  });
+};
+
 const startGame = (setState: GameStateSetter) => (): void => {
-  const down = moveDown(setState);
   setState(state => ({
     ...state,
     paused: false,
     started: true
   }));
-  setInterval(down, 500);
+  setInterval(nextStep(setState), 500);
 };
 
 const pauseGame = (setState: GameStateSetter) => (): void =>

@@ -13,7 +13,13 @@ import useFPS from "../hooks/useFPS";
 const PlayFieldContainer: React.FC = () => {
   const [game] = React.useContext(GameStore);
   useGameControls();
-  return <PlayField piece={game.piece} started={game.started} />;
+  return (
+    <PlayField
+      piece={game.piece}
+      started={game.started}
+      boardLines={game.lines}
+    />
+  );
 };
 
 const StatusContainer: React.FC = () => {

@@ -1,10 +1,11 @@
 import React from "react";
-import { BlockState, BoardPiece, drawBlock } from "./drawing";
+import { BlockState, BoardPiece, drawBlock, DrawableAction } from "./drawing";
 import { updateBoard } from "../state/GameActions";
 
 type PlayFieldProps = {
   started: boolean;
   piece: BoardPiece;
+  boardLines: DrawableAction[];
 };
 
 type CellStyle = { style: React.CSSProperties; testID: string };
@@ -45,11 +46,15 @@ const getStyle = (block: BlockState, backgroundColor: string): CellStyle =>
       }
     : { style: EmptyBlock, testID: "empty" };
 
-const PlayField: React.FC<PlayFieldProps> = ({ piece, started }) => {
+const PlayField: React.FC<PlayFieldProps> = ({
+  piece,
+  started,
+  boardLines
+}) => {
   const highlight = getRandomColor();
   const lines = !started
     ? []
-    : drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
+    : drawBlock(piece.pos.x, piece.pos.y, piece.drawer).concat(boardLines);
   const board = updateBoard(lines);
 
   return (

@@ -9,7 +9,8 @@ const initialState: GameState = {
   lineCount: 0,
   level: 1,
   paused: true,
-  started: false
+  started: false,
+  lines: []
 };
 
 type GameStore = [GameState, GameActions];
