@@ -4,7 +4,9 @@ import {
   Piece,
   drawBlock,
   drawBoard,
-  BlockDrawer
+  BlockDrawer,
+  DrawableAction,
+  BlockState
 } from "../components/drawing";
 import { blocks } from "../components/blocks";
 
@@ -15,6 +17,25 @@ const atBottom = (piece: BoardPiece): boolean => {
   return (
     actions.find(action => action.y >= updateBoard([]).length - 1) !== undefined
   );
+};
+
+const atLeft = (piece: BoardPiece): boolean => {
+  const actions = drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
+  return actions.find(action => action.x === 0) !== undefined;
+};
+
+const atRight = (piece: BoardPiece): boolean => {
+  const board = updateBoard([]);
+  const actions = drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
+  return actions.find(action => action.x >= board[0].length - 1) !== undefined;
+};
+
+const didCollide = (actions: DrawableAction[], game: GameState): boolean => {
+  const newBoard = updateBoard(game.lines);
+  const collisions = actions.find(
+    action => newBoard[action.y][action.x] === BlockState.on
+  );
+  return collisions !== undefined;
 };
 
 export const pieceToBoardPiece = (piece: Piece): BoardPiece => ({
@@ -59,7 +80,7 @@ const incrementPieceY = (state: GameState): GameState => ({
   ...state,
   piece: {
     ...state.piece,
-    pos: { ...state.piece.pos, y: ++state.piece.pos.y }
+    pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
   }
 });
 
@@ -71,16 +92,22 @@ const moveDown = (setState: GameStateSetter) => (): void => {
 
 const nextStep = (setState: GameStateSetter) => (): void => {
   setState(state => {
-    if (atBottom(state.piece)) {
+    const { piece: moved } = incrementPieceY(state);
+    const actions = drawBlock(moved.pos.x, moved.pos.y, moved.drawer);
+
+    if (atBottom(state.piece) || didCollide(actions, state)) {
+      const { piece } = state;
       return {
         ...state,
         piece: pieceToBoardPiece(state.next),
+        next: pickNewPiece(),
         lines: state.lines.concat(
-          drawBlock(state.piece.pos.x, state.piece.pos.y, state.piece.drawer)
+          drawBlock(piece.pos.x, piece.pos.y, piece.drawer)
         )
       };
+    } else {
+      return incrementPieceY(state);
     }
-    return incrementPieceY(state);
   });
 };
 
@@ -106,22 +133,30 @@ const resumeGame = (setState: GameStateSetter) => (): void =>
   }));
 
 const moveRight = (setState: GameStateSetter) => (): void =>
-  setState(state => ({
-    ...state,
-    piece: {
-      ...state.piece,
-      pos: { ...state.piece.pos, x: ++state.piece.pos.x }
-    }
-  }));
+  setState(state => {
+    return atRight(state.piece)
+      ? state
+      : {
+          ...state,
+          piece: {
+            ...state.piece,
+            pos: { ...state.piece.pos, x: state.piece.pos.x + 1 }
+          }
+        };
+  });
 
 const moveLeft = (setState: GameStateSetter) => (): void =>
-  setState(state => ({
-    ...state,
-    piece: {
-      ...state.piece,
-      pos: { ...state.piece.pos, x: --state.piece.pos.x }
-    }
-  }));
+  setState(state => {
+    return atLeft(state.piece)
+      ? state
+      : {
+          ...state,
+          piece: {
+            ...state.piece,
+            pos: { ...state.piece.pos, x: state.piece.pos.x - 1 }
+          }
+        };
+  });
 
 export const gameActions = (setState: GameStateSetter): GameActions => ({
   incrementScore: incrementScore(setState),
