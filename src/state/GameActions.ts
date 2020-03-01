@@ -45,6 +45,10 @@ export const pieceToBoardPiece = (piece: Piece): BoardPiece => ({
   drawer: piece[0]
 });
 
+const drawPiece = (state: GameState): DrawableAction[] => {
+  return drawBlock(state.piece.pos.x, state.piece.pos.y, state.piece.drawer);
+};
+
 export const pickNewPiece = (): Piece => {
   const pieceIndex = Math.floor(Math.random() * blocks.length);
   return blocks[pieceIndex];
@@ -66,48 +70,40 @@ const rotationBlocked = (piece: BoardPiece): boolean => {
 };
 
 const rotatePiece = (setState: GameStateSetter) => (): void => {
-  setState(state => {
-    if (rotationBlocked(state.piece)) {
-      return state;
-    } else {
-      const drawer = getNewDrawer(state.piece);
-      return { ...state, piece: { ...state.piece, drawer } };
-    }
-  });
-};
-
-const incrementPieceY = (state: GameState): GameState => ({
-  ...state,
-  piece: {
-    ...state.piece,
-    pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
-  }
-});
-
-const moveDown = (setState: GameStateSetter) => (): void => {
   setState(state =>
-    atBottom(state.piece) || state.paused ? state : incrementPieceY(state)
+    !rotationBlocked(state.piece)
+      ? {
+          ...state,
+          piece: { ...state.piece, drawer: getNewDrawer(state.piece) }
+        }
+      : state
   );
 };
 
-const nextStep = (setState: GameStateSetter) => (): void => {
-  setState(state => {
-    const { piece: moved } = incrementPieceY(state);
-    const actions = drawBlock(moved.pos.x, moved.pos.y, moved.drawer);
+const endPieceMovement = (state: GameState): GameState => ({
+  ...state,
+  piece: pieceToBoardPiece(state.next),
+  next: pickNewPiece(),
+  lines: state.lines.concat(
+    drawBlock(state.piece.pos.x, state.piece.pos.y, state.piece.drawer)
+  )
+});
 
-    if (atBottom(state.piece) || didCollide(actions, state)) {
-      const { piece } = state;
-      return {
-        ...state,
-        piece: pieceToBoardPiece(state.next),
-        next: pickNewPiece(),
-        lines: state.lines.concat(
-          drawBlock(piece.pos.x, piece.pos.y, piece.drawer)
-        )
-      };
-    } else {
-      return incrementPieceY(state);
-    }
+const moveDown = (setState: GameStateSetter) => (): void => {
+  setState(state => {
+    const newState = {
+      ...state,
+      piece: {
+        ...state.piece,
+        pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
+      }
+    };
+
+    return atBottom(state.piece) || didCollide(drawPiece(newState), state)
+      ? endPieceMovement(state)
+      : !state.paused
+      ? newState
+      : state;
   });
 };
 
@@ -117,7 +113,7 @@ const startGame = (setState: GameStateSetter) => (): void => {
     paused: false,
     started: true
   }));
-  setInterval(nextStep(setState), 500);
+  setInterval(moveDown(setState), 500);
 };
 
 const pauseGame = (setState: GameStateSetter) => (): void =>
@@ -134,28 +130,32 @@ const resumeGame = (setState: GameStateSetter) => (): void =>
 
 const moveRight = (setState: GameStateSetter) => (): void =>
   setState(state => {
-    return atRight(state.piece)
+    const newState = {
+      ...state,
+      piece: {
+        ...state.piece,
+        pos: { ...state.piece.pos, x: state.piece.pos.x + 1 }
+      }
+    };
+
+    return atRight(state.piece) || didCollide(drawPiece(newState), state)
       ? state
-      : {
-          ...state,
-          piece: {
-            ...state.piece,
-            pos: { ...state.piece.pos, x: state.piece.pos.x + 1 }
-          }
-        };
+      : newState;
   });
 
 const moveLeft = (setState: GameStateSetter) => (): void =>
   setState(state => {
-    return atLeft(state.piece)
+    const newState = {
+      ...state,
+      piece: {
+        ...state.piece,
+        pos: { ...state.piece.pos, x: state.piece.pos.x - 1 }
+      }
+    };
+
+    return atLeft(state.piece) || didCollide(drawPiece(newState), state)
       ? state
-      : {
-          ...state,
-          piece: {
-            ...state.piece,
-            pos: { ...state.piece.pos, x: state.piece.pos.x - 1 }
-          }
-        };
+      : newState;
   });
 
 export const gameActions = (setState: GameStateSetter): GameActions => ({
