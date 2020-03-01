@@ -4,8 +4,7 @@ import {
   Piece,
   drawBlock,
   drawBoard,
-  BlockDrawer,
-  DrawableGrid
+  BlockDrawer
 } from "../components/drawing";
 import { blocks } from "../components/blocks";
 
@@ -38,22 +37,27 @@ const getNewDrawer = (boarPiece: BoardPiece): BlockDrawer => {
   return boarPiece.piece[idx === boarPiece.piece.length - 1 ? 0 : idx + 1];
 };
 
-const rotationBlocked = (piece: BoardPiece, board: DrawableGrid): boolean => {
+const rotationBlocked = (piece: BoardPiece): boolean => {
   const drawer = getNewDrawer(piece);
+  const board = updateBoard([]);
   const actions = drawBlock(piece.pos.x, piece.pos.y, drawer);
   return actions.find(action => action.x >= board[0].length) !== undefined;
 };
 
 const rotatePiece = (setState: GameStateSetter) => (): void => {
   setState(state => {
-    const drawer = getNewDrawer(state.piece);
-    return { ...state, piece: { ...state.piece, drawer } };
+    if (rotationBlocked(state.piece)) {
+      return state;
+    } else {
+      const drawer = getNewDrawer(state.piece);
+      return { ...state, piece: { ...state.piece, drawer } };
+    }
   });
 };
 
 const moveDown = (setState: GameStateSetter) => (): void => {
   setState(state =>
-    atBottom(state.piece)
+    atBottom(state.piece) || state.paused
       ? state
       : {
           ...state,
@@ -66,19 +70,13 @@ const moveDown = (setState: GameStateSetter) => (): void => {
 };
 
 const startGame = (setState: GameStateSetter) => (): void => {
+  const down = moveDown(setState);
   setState(state => ({
     ...state,
     paused: false,
     started: true
   }));
-  setInterval(
-    () =>
-      setState(state => {
-        if (!state.paused) moveDown(setState)();
-        return state;
-      }),
-    500
-  );
+  setInterval(down, 500);
 };
 
 const pauseGame = (setState: GameStateSetter) => (): void =>

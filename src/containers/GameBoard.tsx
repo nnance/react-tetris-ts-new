@@ -8,6 +8,7 @@ import PlayField from "../components/PlayField";
 import NextPiece from "../components/NextPiece";
 import useTheme from "../hooks/useTheme";
 import useGameControls from "../hooks/useGameControls";
+import useFPS from "../hooks/useFPS";
 
 const PlayFieldContainer: React.FC = () => {
   const [game] = React.useContext(GameStore);
@@ -17,8 +18,8 @@ const PlayFieldContainer: React.FC = () => {
 
 const StatusContainer: React.FC = () => {
   const [game] = React.useContext(GameStore);
-  // const fps = useFPS();
-  return <StatusSection fps={60} level={game.score} lines={game.lineCount} />;
+  const fps = useFPS();
+  return <StatusSection fps={fps} level={game.score} lines={game.lineCount} />;
 };
 
 export default function GameBoardContainer(): React.ReactElement {

@@ -16,6 +16,7 @@ const handler = (actions: GameActions) => ({
   if (keyCode === KeyCode.rightArrow) actions.moveRight();
   else if (keyCode === KeyCode.leftArrow) actions.moveLeft();
   else if (keyCode === KeyCode.upArrow) actions.rotatePiece();
+  else if (keyCode === KeyCode.downArrow) actions.moveDown();
 };
 
 const useGameControls = (): void => {
