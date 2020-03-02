@@ -90,9 +90,6 @@ export const pickNewPiece = (): Piece => {
   return blocks[pieceIndex];
 };
 
-const incrementScore = (setState: GameStateSetter) => (value: number): void =>
-  setState(state => ({ ...state, score: state.score + value }));
-
 const getNewDrawer = (boarPiece: BoardPiece): BlockDrawer => {
   const idx = boarPiece.piece.findIndex(drawer => drawer === boarPiece.drawer);
   return boarPiece.piece[idx === boarPiece.piece.length - 1 ? 0 : idx + 1];
@@ -104,16 +101,13 @@ const rotationBlocked = (piece: BoardPiece): boolean => {
   return checkBoundary(newPiece, action => action.x >= board[0].length);
 };
 
-const rotatePiece = (setState: GameStateSetter) => (): void => {
-  setState(state =>
-    !rotationBlocked(state.piece)
-      ? {
-          ...state,
-          piece: { ...state.piece, drawer: getNewDrawer(state.piece) }
-        }
-      : state
-  );
-};
+export const rotatePiece = (state: GameState): GameState =>
+  !rotationBlocked(state.piece)
+    ? {
+        ...state,
+        piece: { ...state.piece, drawer: getNewDrawer(state.piece) }
+      }
+    : state;
 
 const endPieceMovement = (state: GameState): GameState => {
   const lines = state.lines.concat(drawPiece(state.piece));
@@ -133,7 +127,7 @@ const endPieceMovement = (state: GameState): GameState => {
       };
 };
 
-const moveDown = (setState: GameStateSetter) => (): void => {
+const gameCycle = (setState: GameStateSetter) => (): void => {
   setState(state => {
     const newState = {
       ...state,
@@ -166,26 +160,40 @@ const moveDown = (setState: GameStateSetter) => (): void => {
   });
 };
 
-const startGame = (setState: GameStateSetter) => (): void => {
-  setState(state => ({
+export const incrementScore = (state: GameState, value: number): GameState => ({
+  ...state,
+  score: state.score + value
+});
+
+export const startGame = (state: GameState): GameState => ({
+  ...state,
+  paused: false,
+  started: true
+});
+
+export const pauseGame = (state: GameState): GameState => ({
+  ...state,
+  paused: true
+});
+
+export const resumeGame = (state: GameState): GameState => ({
+  ...state,
+  paused: false
+});
+
+export const moveDown = (state: GameState): GameState => {
+  const newState = {
     ...state,
-    paused: false,
-    started: true
-  }));
-  setInterval(moveDown(setState), 500);
+    piece: {
+      ...state.piece,
+      pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
+    }
+  };
+
+  return atBottom(state.piece) || didCollide(newState.piece, state)
+    ? state
+    : newState;
 };
-
-const pauseGame = (setState: GameStateSetter) => (): void =>
-  setState(state => ({
-    ...state,
-    paused: true
-  }));
-
-const resumeGame = (setState: GameStateSetter) => (): void =>
-  setState(state => ({
-    ...state,
-    paused: false
-  }));
 
 export const moveRight = (state: GameState): GameState => {
   const newState = {
@@ -216,12 +224,16 @@ export const moveLeft = (state: GameState): GameState => {
 };
 
 export const gameActions = (setState: GameStateSetter): GameActions => ({
-  incrementScore: incrementScore(setState),
-  startGame: startGame(setState),
-  pauseGame: pauseGame(setState),
-  resumeGame: resumeGame(setState),
-  moveDown: moveDown(setState),
+  startGame: (): void => {
+    setState(state => startGame(state));
+    setInterval(gameCycle(setState), 500);
+  },
+  incrementScore: (value: number): void =>
+    setState(state => incrementScore(state, value)),
+  pauseGame: (): void => setState(state => pauseGame(state)),
+  resumeGame: (): void => setState(state => resumeGame(state)),
+  moveDown: (): void => setState(state => moveDown(state)),
   moveRight: (): void => setState(state => moveRight(state)),
   moveLeft: (): void => setState(state => moveLeft(state)),
-  rotatePiece: rotatePiece(setState)
+  rotatePiece: (): void => setState(state => rotatePiece(state))
 });
