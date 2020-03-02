@@ -6,7 +6,9 @@ import {
   drawBoard,
   BlockDrawer,
   DrawableAction,
-  BlockState
+  BlockState,
+  BlockColor,
+  DrawableState
 } from "../components/drawing";
 import { blocks } from "../components/blocks";
 
@@ -37,7 +39,7 @@ const didCollide = (piece: BoardPiece, game: GameState): boolean => {
   const newBoard = updateBoard(game.lines);
   return checkBoundary(
     piece,
-    action => newBoard[action.y][action.x] === BlockState.on
+    action => newBoard[action.y][action.x][0] === BlockState.on
   );
 };
 
@@ -59,7 +61,12 @@ const highlightLines = (
   actions.reduce((prev, action) => {
     const newAction = fullRows.reduce(
       (prev, row) =>
-        prev.y === row ? { ...prev, state: BlockState.highlight } : prev,
+        prev.y === row
+          ? {
+              ...prev,
+              state: [BlockState.highlight, BlockColor.random] as DrawableState
+            }
+          : prev,
       { ...action }
     );
     return prev.concat(newAction);

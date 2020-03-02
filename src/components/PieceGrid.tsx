@@ -10,11 +10,6 @@ const Block = {
   fontSize: "0.75rem"
 };
 
-const PieceBlock = {
-  ...Block,
-  backgroundColor: "blue"
-};
-
 const EmptyBlock = {
   ...Block,
   backgroundColor: "white"
@@ -33,7 +28,9 @@ const PieceGrid: React.FC<PieceGridProps> = props => {
             {row.map((col, idx) => (
               <td
                 key={`${rowIdx}, ${idx}`}
-                style={col ? PieceBlock : EmptyBlock}
+                style={
+                  col[0] ? { ...Block, backgroundColor: col[1] } : EmptyBlock
+                }
               >
                 {" "}
               </td>

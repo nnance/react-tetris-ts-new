@@ -1,3 +1,16 @@
+export enum BlockColor {
+  cyan = "cyan",
+  blue = "blue",
+  orange = "orange",
+  yellow = "yellow",
+  green = "green",
+  purple = "purple",
+  red = "red",
+  white = "white",
+  grew = "grey",
+  random = "random"
+}
+
 export enum BlockState {
   off,
   on,
@@ -5,10 +18,12 @@ export enum BlockState {
   highlight
 }
 
+export type DrawableState = [BlockState, BlockColor];
+
 export type DrawableAction = {
   x: number;
   y: number;
-  state: BlockState;
+  state: DrawableState;
 };
 
 export type BlockDrawer = (
@@ -19,7 +34,7 @@ export type BlockDrawer = (
 
 export type Piece = BlockDrawer[];
 
-export type DrawableGrid = BlockState[][];
+export type DrawableGrid = DrawableState[][];
 
 export type Pos = {
   x: number;

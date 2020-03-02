@@ -1,5 +1,11 @@
 import React from "react";
-import { BlockState, BoardPiece, drawBlock, DrawableAction } from "./drawing";
+import {
+  BlockState,
+  BoardPiece,
+  drawBlock,
+  DrawableAction,
+  BlockColor
+} from "./drawing";
 import { updateBoard } from "../state/GameActions";
 
 type PlayFieldProps = {
@@ -36,9 +42,13 @@ const getRandomColor = (): string => {
   return color;
 };
 
-const getStyle = (block: BlockState, backgroundColor: string): CellStyle =>
+const getStyle = (
+  block: BlockState,
+  color: BlockColor,
+  backgroundColor: string
+): CellStyle =>
   block === BlockState.on
-    ? { style: PieceBlock, testID: "on" }
+    ? { style: { ...Block, backgroundColor: color }, testID: "on" }
     : block === BlockState.highlight
     ? {
         style: { ...Block, backgroundColor },
@@ -66,8 +76,8 @@ const PlayField: React.FC<PlayFieldProps> = ({
               {row.map((block, idx) => (
                 <td
                   key={idx}
-                  style={getStyle(block, highlight).style}
-                  data-testid={getStyle(block, highlight).testID}
+                  style={getStyle(block[0], block[1], highlight).style}
+                  data-testid={getStyle(block[0], block[1], highlight).testID}
                 >
                   {" "}
                 </td>
