@@ -7,7 +7,8 @@ import {
   pauseGame,
   resumeGame,
   rotatePiece,
-  startGame
+  startGame,
+  gameCycle
 } from "./GameActions";
 import { OBlock, IBlock } from "../components/blocks";
 import { GameState } from "../types";
@@ -40,63 +41,73 @@ const moveRight12Times = moveTimes(12, moveRight);
 const moveDown25Times = moveTimes(25, moveDown);
 
 describe("when moving left", () => {
-  test("should move when not at the edge", () => {
+  it("should move when not at the edge", () => {
     expect(moveLeft(initialState).piece.pos.x).toBe(0);
   });
-  test("should stop at the edge", () => {
+  it("should stop at the edge", () => {
     expect(moveLeft6Times(initialState).piece.pos.x).toBe(0);
   });
-  test("should stop when it collides", () => {
+  it("should stop when it collides", () => {
     const state = { ...initialState, lines: drawBlock(0, 0, IBlock[0]) };
     expect(moveLeft(state).piece.pos.x).toBe(1);
   });
 });
 
 describe("when moving right", () => {
-  test("should move when not at the edge", () => {
+  it("should move when not at the edge", () => {
     expect(moveRight(initialState).piece.pos.x).toBe(2);
   });
-  test("should stop at the edge", () => {
+  it("should stop at the edge", () => {
     expect(moveRight12Times(initialState).piece.pos.x).toBe(8);
   });
-  test("should stop when it collides", () => {
+  it("should stop when it collides", () => {
     const state = { ...initialState, lines: drawBlock(3, 0, IBlock[0]) };
     expect(moveRight(state).piece.pos.x).toBe(1);
   });
 });
 
 describe("when moving down", () => {
-  test("should move when not at the bottom", () => {
+  it("should move when not at the bottom", () => {
     expect(moveDown(initialState).piece.pos.y).toBe(1);
   });
-  test("should stop at the bottom", () => {
+  it("should stop at the bottom", () => {
     expect(moveDown25Times(initialState).piece.pos.y).toBe(18);
   });
-  test("should stop when it collides", () => {
+  it("should stop when it collides", () => {
     const state = { ...initialState, lines: drawBlock(0, 2, IBlock[1]) };
     expect(moveDown(state).piece.pos.y).toBe(0);
   });
 });
 
-test("should add to the score", () => {
+it("should add to the score", () => {
   expect(incrementScore(initialState, 1).score).toBe(1);
 });
 
-test("should pause the game", () => {
+it("should pause the game", () => {
   expect(pauseGame(initialState).paused).toBeTruthy();
 });
 
-test("should resume the game", () => {
+it("should resume the game", () => {
   const state = { ...initialState, paused: true };
   expect(resumeGame(state).paused).toBeFalsy();
 });
 
-test("should rotate the piece", () => {
+it("should rotate the piece", () => {
   const state = { ...initialState, piece: pieceToBoardPiece(IBlock) };
   expect(rotatePiece(state).piece.drawer).toEqual(IBlock[1]);
 });
 
-test("should start the game", () => {
+it("should start the game", () => {
   const state = { ...initialState, paused: true, started: false };
   expect(startGame(state).started).toBeTruthy();
+});
+
+describe("when the game cycles", () => {
+  it("should pick a new piece when it reaches the bottom", () => {
+    const state = moveDown25Times({
+      ...initialState,
+      lines: drawBlock(0, 19, IBlock[1])
+    });
+    expect(gameCycle(state).next).not.toEqual(OBlock);
+  });
 });

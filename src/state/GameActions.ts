@@ -1,4 +1,4 @@
-import { GameStateSetter, GameActions, GameState } from "../types";
+import { GameState } from "../types";
 import {
   BoardPiece,
   Piece,
@@ -127,37 +127,35 @@ const endPieceMovement = (state: GameState): GameState => {
       };
 };
 
-const gameCycle = (setState: GameStateSetter) => (): void => {
-  setState(state => {
-    const newState = {
-      ...state,
-      piece: {
-        ...state.piece,
-        pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
-      }
-    };
+export const gameCycle = (state: GameState): GameState => {
+  const newState = {
+    ...state,
+    piece: {
+      ...state.piece,
+      pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
+    }
+  };
 
-    return state.tetrisLines.length > 0 && state.tetrisCycle > 0
-      ? {
-          ...state,
-          lines: highlightLines(state.tetrisLines, state.lines),
-          tetrisCycle: state.tetrisCycle - 1
-        }
-      : state.tetrisLines.length > 0
-      ? {
-          ...state,
-          tetrisLines: [],
-          lineCount: state.lineCount + state.tetrisLines.length,
-          lines: eraseLines(state.tetrisLines, state.lines),
-          piece: pieceToBoardPiece(state.next),
-          next: pickNewPiece()
-        }
-      : atBottom(state.piece) || didCollide(newState.piece, state)
-      ? endPieceMovement(state)
-      : !state.paused
-      ? newState
-      : state;
-  });
+  return state.tetrisLines.length > 0 && state.tetrisCycle > 0
+    ? {
+        ...state,
+        lines: highlightLines(state.tetrisLines, state.lines),
+        tetrisCycle: state.tetrisCycle - 1
+      }
+    : state.tetrisLines.length > 0
+    ? {
+        ...state,
+        tetrisLines: [],
+        lineCount: state.lineCount + state.tetrisLines.length,
+        lines: eraseLines(state.tetrisLines, state.lines),
+        piece: pieceToBoardPiece(state.next),
+        next: pickNewPiece()
+      }
+    : atBottom(state.piece) || didCollide(newState.piece, state)
+    ? endPieceMovement(state)
+    : !state.paused
+    ? newState
+    : state;
 };
 
 export const incrementScore = (state: GameState, value: number): GameState => ({
@@ -222,18 +220,3 @@ export const moveLeft = (state: GameState): GameState => {
     ? state
     : newState;
 };
-
-export const gameActions = (setState: GameStateSetter): GameActions => ({
-  startGame: (): void => {
-    setState(state => startGame(state));
-    setInterval(gameCycle(setState), 500);
-  },
-  incrementScore: (value: number): void =>
-    setState(state => incrementScore(state, value)),
-  pauseGame: (): void => setState(state => pauseGame(state)),
-  resumeGame: (): void => setState(state => resumeGame(state)),
-  moveDown: (): void => setState(state => moveDown(state)),
-  moveRight: (): void => setState(state => moveRight(state)),
-  moveLeft: (): void => setState(state => moveLeft(state)),
-  rotatePiece: (): void => setState(state => rotatePiece(state))
-});
