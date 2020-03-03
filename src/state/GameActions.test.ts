@@ -13,6 +13,7 @@ import {
 import { OBlock, IBlock } from "../components/blocks";
 import { GameState } from "../types";
 import { drawBlock } from "../components/drawing";
+import { basicRules } from "./GameRules";
 
 const initialState: GameState = {
   piece: pieceToBoardPiece(OBlock),
@@ -103,21 +104,51 @@ it("should start the game", () => {
 });
 
 describe("when the game cycles", () => {
+  const basicGameCycle = gameCycle(basicRules());
+
   it("should pick a new piece when it reaches the bottom", () => {
     const state = moveDown25Times({
       ...initialState,
       lines: drawBlock(0, 19, IBlock[1])
     });
-    expect(gameCycle(state).next).not.toEqual(OBlock);
+    expect(basicGameCycle(state).next).not.toEqual(OBlock);
   });
 
   it("should calculate the new score based on completed lines", () => {
     const state = { ...initialState, tetrisLines: [19] };
-    expect(gameCycle(state).score).toEqual(100);
+    expect(basicGameCycle(state).score).toEqual(100);
   });
 
   it("should multiply score by level", () => {
     const state = { ...initialState, tetrisLines: [19, 18], level: 3 };
-    expect(gameCycle(state).score).toEqual(900);
+    expect(basicGameCycle(state).score).toEqual(900);
+  });
+
+  it("should add to existing score", () => {
+    const state = {
+      ...initialState,
+      score: 100,
+      tetrisLines: [19, 18],
+      level: 3
+    };
+    expect(basicGameCycle(state).score).toEqual(1000);
+  });
+
+  it("should level up after 10 lines", () => {
+    const state = {
+      ...initialState,
+      tetrisLines: [19, 18],
+      lineCount: 8
+    };
+    expect(basicGameCycle(state).level).toEqual(2);
+  });
+
+  it("should leave remainder on line count", () => {
+    const state = {
+      ...initialState,
+      tetrisLines: [19, 18],
+      lineCount: 9
+    };
+    expect(basicGameCycle(state).lineCount).toEqual(1);
   });
 });
