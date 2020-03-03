@@ -110,4 +110,14 @@ describe("when the game cycles", () => {
     });
     expect(gameCycle(state).next).not.toEqual(OBlock);
   });
+
+  it("should calculate the new score based on completed lines", () => {
+    const state = { ...initialState, tetrisLines: [19] };
+    expect(gameCycle(state).score).toEqual(100);
+  });
+
+  it("should multiply score by level", () => {
+    const state = { ...initialState, tetrisLines: [19, 18], level: 3 };
+    expect(gameCycle(state).score).toEqual(900);
+  });
 });

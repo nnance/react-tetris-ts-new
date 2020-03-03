@@ -109,6 +109,18 @@ export const rotatePiece = (state: GameState): GameState =>
       }
     : state;
 
+const calculateScore = (lines: number, level: number): number => {
+  return lines === 1
+    ? 100 * level
+    : lines === 2
+    ? 300 * level
+    : lines === 3
+    ? 500 * level
+    : lines === 4
+    ? 800 * level
+    : 0;
+};
+
 const endPieceMovement = (state: GameState): GameState => {
   const lines = state.lines.concat(drawPiece(state.piece));
   const fullRows = findFullRows(lines);
@@ -146,6 +158,7 @@ export const gameCycle = (state: GameState): GameState => {
     ? {
         ...state,
         tetrisLines: [],
+        score: calculateScore(state.tetrisLines.length, state.level),
         lineCount: state.lineCount + state.tetrisLines.length,
         lines: eraseLines(state.tetrisLines, state.lines),
         piece: pieceToBoardPiece(state.next),
