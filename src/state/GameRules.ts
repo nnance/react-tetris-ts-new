@@ -37,8 +37,8 @@ const speedCurve = (state: ScoreState): ScoreState => ({
 });
 
 export const initialScoreState = speedCurve({
-  level: 5,
-  lineCount: 9,
+  level: 1,
+  lineCount: 0,
   score: 0,
   gravity: 0
 });
