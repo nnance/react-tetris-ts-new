@@ -12,6 +12,7 @@ export type GameState = {
   tetrisLines: number[];
   tetrisCycle: number;
   lines: DrawableAction[];
+  gravity: number;
 };
 
 export type GameActions = {

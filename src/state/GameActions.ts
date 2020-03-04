@@ -9,7 +9,7 @@ import {
   BlockState
 } from "../components/drawing";
 import { blocks } from "../components/blocks";
-import { GameRules } from "./GameRules";
+import { GameRules, ScoreState } from "./GameRules";
 
 export const updateBoard = drawBoard(20, 10);
 
@@ -140,10 +140,11 @@ export const gameCycle = (rules: GameRules) => (
   };
 
   const lines = state.tetrisLines.length;
-  const scoreState = {
+  const scoreState: ScoreState = {
     lineCount: state.lineCount,
     level: state.level,
-    score: state.score
+    score: state.score,
+    gravity: state.gravity
   };
 
   return lines > 0 && state.tetrisCycle > 0

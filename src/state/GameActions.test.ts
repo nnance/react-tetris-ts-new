@@ -13,14 +13,12 @@ import {
 import { OBlock, IBlock } from "../components/blocks";
 import { GameState } from "../types";
 import { drawBlock } from "../components/drawing";
-import { basicRules } from "./GameRules";
+import { basicRules, initialScoreState } from "./GameRules";
 
 const initialState: GameState = {
+  ...initialScoreState,
   piece: pieceToBoardPiece(OBlock),
   next: OBlock,
-  score: 0,
-  lineCount: 0,
-  level: 1,
   paused: false,
   started: true,
   lines: [],

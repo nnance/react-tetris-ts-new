@@ -13,18 +13,17 @@ import {
   rotatePiece
 } from "./GameActions";
 import { GameState, GameActions, GameStateSetter } from "../types";
+import { initialScoreState, basicRules } from "./GameRules";
 
 const initialState: GameState = {
   piece: pieceToBoardPiece(pickNewPiece()),
   next: pickNewPiece(),
-  score: 0,
-  lineCount: 0,
-  level: 1,
   paused: true,
   started: false,
   lines: [],
   tetrisLines: [],
-  tetrisCycle: 0
+  tetrisCycle: 0,
+  ...initialScoreState
 };
 
 type GameStore = [GameState, GameActions];
@@ -37,7 +36,7 @@ const GameStore = React.createContext<GameStore>([
 const gameActions = (setState: GameStateSetter): GameActions => ({
   startGame: (): void => {
     setState(state => startGame(state));
-    setInterval(() => setState(state => gameCycle(state)), 500);
+    setInterval(() => setState(state => gameCycle(basicRules)(state)), 500);
   },
   incrementScore: (value: number): void =>
     setState(state => incrementScore(state, value)),
