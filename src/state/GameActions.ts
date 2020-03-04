@@ -131,7 +131,6 @@ const endPieceMovement = (state: GameState): GameState => {
 export const gameCycle = (rules: GameRules) => (
   state: GameState
 ): GameState => {
-  const { calculateScore } = rules;
   const newState = {
     ...state,
     piece: {
@@ -140,19 +139,24 @@ export const gameCycle = (rules: GameRules) => (
     }
   };
 
-  return state.tetrisLines.length > 0 && state.tetrisCycle > 0
+  const lines = state.tetrisLines.length;
+  const scoreState = {
+    lineCount: state.lineCount,
+    level: state.level,
+    score: state.score
+  };
+
+  return lines > 0 && state.tetrisCycle > 0
     ? {
         ...state,
         lines: highlightLines(state.tetrisLines, state.lines),
         tetrisCycle: state.tetrisCycle - 1
       }
-    : state.tetrisLines.length > 0
+    : lines > 0
     ? {
         ...state,
         tetrisLines: [],
-        score:
-          state.score + calculateScore(state.tetrisLines.length, state.level),
-        lineCount: state.lineCount + state.tetrisLines.length,
+        ...rules(lines, scoreState),
         lines: eraseLines(state.tetrisLines, state.lines),
         piece: pieceToBoardPiece(state.next),
         next: pickNewPiece()
