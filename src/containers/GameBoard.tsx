@@ -24,7 +24,14 @@ const PlayFieldContainer: React.FC = () => {
 const StatusContainer: React.FC = () => {
   const [game] = React.useContext(GameStore);
   const fps = useFPS();
-  return <StatusSection fps={fps} level={game.score} lines={game.lineCount} />;
+  return (
+    <StatusSection
+      fps={fps}
+      score={game.score}
+      level={game.level}
+      lines={game.lineCount}
+    />
+  );
 };
 
 export default function GameBoardContainer(): React.ReactElement {

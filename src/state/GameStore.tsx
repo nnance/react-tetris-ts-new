@@ -14,6 +14,7 @@ import {
 } from "./GameActions";
 import { GameState, GameActions, GameStateSetter } from "../types";
 import { initialScoreState, basicRules } from "./GameRules";
+import useInterval from "../hooks/useInterval";
 
 const initialState: GameState = {
   piece: pieceToBoardPiece(pickNewPiece()),
@@ -36,7 +37,6 @@ const GameStore = React.createContext<GameStore>([
 const gameActions = (setState: GameStateSetter): GameActions => ({
   startGame: (): void => {
     setState(state => startGame(state));
-    setInterval(() => setState(state => gameCycle(basicRules)(state)), 500);
   },
   incrementScore: (value: number): void =>
     setState(state => incrementScore(state, value)),
@@ -50,6 +50,10 @@ const gameActions = (setState: GameStateSetter): GameActions => ({
 
 export const GameProvider: React.FC = ({ children }) => {
   const [state, setState] = React.useState(initialState);
+  useInterval(
+    () => setState(state => gameCycle(basicRules)(state)),
+    state.gravity
+  );
   const actions = gameActions(setState);
 
   return (

@@ -2,6 +2,7 @@ import React from "react";
 
 type StatusProps = {
   fps: number;
+  score: number;
   level: number;
   lines: number;
 };
@@ -12,9 +13,9 @@ const Status: React.FC<StatusProps> = props => (
       <tbody>
         <tr>
           <td>
-            <b>FPS:</b>
+            <b>Score:</b>
           </td>
-          <td style={{ width: "30px" }}>{props.fps}</td>
+          <td>{props.score}</td>
         </tr>
         <tr>
           <td>
@@ -27,6 +28,12 @@ const Status: React.FC<StatusProps> = props => (
             <b>Lines:</b>
           </td>
           <td>{props.lines}</td>
+        </tr>
+        <tr>
+          <td>
+            <b>FPS:</b>
+          </td>
+          <td style={{ width: "30px" }}>{props.fps}</td>
         </tr>
       </tbody>
     </table>

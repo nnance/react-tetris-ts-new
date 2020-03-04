@@ -4,6 +4,7 @@ import Controls from "./Controls";
 
 type StatusProps = {
   fps: number;
+  score: number;
   level: number;
   lines: number;
   message?: string;
@@ -12,7 +13,12 @@ type StatusProps = {
 const StatusSection: React.FC<StatusProps> = props => {
   return (
     <div className="col-md-4 d-none d-md-block" style={{ textAlign: "right" }}>
-      <Status fps={props.fps} level={props.level} lines={props.lines} />
+      <Status
+        fps={props.fps}
+        score={props.score}
+        level={props.level}
+        lines={props.lines}
+      />
       <br />
       <br />
       <br />
