@@ -2,6 +2,7 @@ export type ScoreState = {
   level: number;
   lineCount: number;
   score: number;
+  gravity: number;
 };
 
 export type GameRules = (lines: number, state: ScoreState) => ScoreState;
@@ -30,5 +31,17 @@ const standardLevelUp = (lines: number, state: ScoreState): ScoreState => {
     : { ...state, lineCount: newLines };
 };
 
+const speedCurve = (state: ScoreState): ScoreState => ({
+  ...state,
+  gravity: Math.pow(0.8 - (state.level - 1) * 0.007, state.level - 1) * 1000
+});
+
+export const initialScoreState = speedCurve({
+  level: 1,
+  lineCount: 0,
+  score: 0,
+  gravity: 0
+});
+
 export const basicRules: GameRules = (lines, state): ScoreState =>
-  standardLevelUp(lines, tetrisDSScoring(lines, state));
+  speedCurve(standardLevelUp(lines, tetrisDSScoring(lines, state)));
