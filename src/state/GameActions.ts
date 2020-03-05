@@ -70,13 +70,19 @@ const eraseLines = (
   fullRows: number[],
   actions: DrawableAction[]
 ): DrawableAction[] => {
+  const calculateDrop = (action: DrawableAction): DrawableAction =>
+    fullRows.reduce(
+      (prev, row) => (prev.y < row ? { ...prev, y: prev.y + 1 } : prev),
+      { ...action }
+    );
+
   return actions
     .reduce(
       (prev, action) =>
         fullRows.find(row => row === action.y) ? prev : prev.concat(action),
       [] as DrawableAction[]
     )
-    .map(action => ({ ...action, y: action.y + fullRows.length }));
+    .map(calculateDrop);
 };
 
 export const pieceToBoardPiece = (piece: Piece): BoardPiece => ({
@@ -139,7 +145,6 @@ export const gameCycle = (rules: GameRules) => (
     }
   };
 
-  const lines = state.tetrisLines.length;
   const scoreState: ScoreState = {
     lineCount: state.lineCount,
     level: state.level,
@@ -147,17 +152,17 @@ export const gameCycle = (rules: GameRules) => (
     gravity: state.gravity
   };
 
-  return lines > 0 && state.tetrisCycle > 0
+  return state.tetrisLines.length > 0 && state.tetrisCycle > 0
     ? {
         ...state,
         lines: highlightLines(state.tetrisLines, state.lines),
         tetrisCycle: state.tetrisCycle - 1
       }
-    : lines > 0
+    : state.tetrisLines.length > 0
     ? {
         ...state,
         tetrisLines: [],
-        ...rules(lines, scoreState),
+        ...rules(state.tetrisLines.length, scoreState),
         lines: eraseLines(state.tetrisLines, state.lines),
         piece: pieceToBoardPiece(state.next),
         next: pickNewPiece()
