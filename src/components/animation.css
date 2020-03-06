@@ -1,0 +1,14 @@
+@keyframes blinking {
+  0% {
+    background-color: #ff3d50;
+    border: 5px solid #871924;
+  }
+  50% {
+    background-color: #55d66b;
+    border: 5px solid #126620;
+  }
+  100% {
+    background-color: #222291;
+    border: 5px solid #6565f2;
+  }
+}

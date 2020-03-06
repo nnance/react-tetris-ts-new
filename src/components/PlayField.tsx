@@ -1,4 +1,5 @@
 import React from "react";
+import "./animation.css";
 import { BlockState, BoardPiece, drawBlock, DrawableAction } from "./drawing";
 import { updateBoard } from "../state/GameActions";
 
@@ -27,21 +28,12 @@ export const EmptyBlock = {
   backgroundColor: "white"
 };
 
-const getRandomColor = (): string => {
-  const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-};
-
-const getStyle = (block: BlockState, backgroundColor: string): CellStyle =>
+const getStyle = (block: BlockState): CellStyle =>
   block === BlockState.on
     ? { style: PieceBlock, testID: "on" }
     : block === BlockState.highlight
     ? {
-        style: { ...Block, backgroundColor },
+        style: { ...Block, animation: "blinking .25s infinite" },
         testID: "highlight"
       }
     : { style: EmptyBlock, testID: "empty" };
@@ -51,7 +43,6 @@ const PlayField: React.FC<PlayFieldProps> = ({
   started,
   boardLines
 }) => {
-  const highlight = getRandomColor();
   const lines = !started
     ? []
     : drawBlock(piece.pos.x, piece.pos.y, piece.drawer).concat(boardLines);
@@ -66,8 +57,8 @@ const PlayField: React.FC<PlayFieldProps> = ({
               {row.map((block, idx) => (
                 <td
                   key={idx}
-                  style={getStyle(block, highlight).style}
-                  data-testid={getStyle(block, highlight).testID}
+                  style={getStyle(block).style}
+                  data-testid={getStyle(block).testID}
                 >
                   {" "}
                 </td>
