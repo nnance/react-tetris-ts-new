@@ -9,7 +9,7 @@ import {
   BlockState
 } from "../components/drawing";
 import { blocks } from "../components/blocks";
-import { GameRules, ScoreState } from "./GameRules";
+import { GameRules } from "./GameRules";
 
 export const updateBoard = drawBoard(20, 10);
 
@@ -136,38 +136,46 @@ const endPieceMovement = (state: GameState): GameState => {
       };
 };
 
-export const gameCycle = (rules: GameRules) => (
-  state: GameState
-): GameState => {
-  const newState = {
-    ...state,
-    piece: {
-      ...state.piece,
-      pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
-    }
-  };
+const decrementTetrisCycle = (state: GameState): GameState => ({
+  ...state,
+  tetrisCycle: state.tetrisCycle - 1
+});
 
-  const scoreState: ScoreState = {
+const endTetrisCycle = (rules: GameRules, state: GameState): GameState => {
+  const newScore = rules(state.tetrisLines.length, {
     lineCount: state.lineCount,
     level: state.level,
     score: state.score,
     gravity: state.gravity
+  });
+
+  return {
+    ...state,
+    tetrisLines: [],
+    ...newScore,
+    lines: eraseLines(state.tetrisLines, state.lines),
+    piece: pieceToBoardPiece(state.next),
+    next: pickNewPiece()
   };
+};
+
+const incrementYPos = (state: GameState): GameState => ({
+  ...state,
+  piece: {
+    ...state.piece,
+    pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
+  }
+});
+
+export const gameCycle = (rules: GameRules) => (
+  state: GameState
+): GameState => {
+  const newState = incrementYPos(state);
 
   return state.tetrisLines.length > 0 && state.tetrisCycle > 0
-    ? {
-        ...state,
-        tetrisCycle: state.tetrisCycle - 1
-      }
+    ? decrementTetrisCycle(state)
     : state.tetrisLines.length > 0
-    ? {
-        ...state,
-        tetrisLines: [],
-        ...rules(state.tetrisLines.length, scoreState),
-        lines: eraseLines(state.tetrisLines, state.lines),
-        piece: pieceToBoardPiece(state.next),
-        next: pickNewPiece()
-      }
+    ? endTetrisCycle(rules, state)
     : atBottom(state.piece) || didCollide(newState.piece, state)
     ? endPieceMovement(state)
     : !state.paused
@@ -197,13 +205,7 @@ export const resumeGame = (state: GameState): GameState => ({
 });
 
 export const moveDown = (state: GameState): GameState => {
-  const newState = {
-    ...state,
-    piece: {
-      ...state.piece,
-      pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
-    }
-  };
+  const newState = incrementYPos(state);
 
   return atBottom(state.piece) || didCollide(newState.piece, state)
     ? state
