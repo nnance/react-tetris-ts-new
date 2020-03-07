@@ -79,7 +79,7 @@ describe("when moving down", () => {
 });
 
 it("should add to the score", () => {
-  expect(incrementScore(initialState, 1).score).toBe(1);
+  expect(incrementScore(1)(initialState).score).toBe(1);
 });
 
 it("should pause the game", () => {

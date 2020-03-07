@@ -13,6 +13,8 @@ import { GameRules } from "./GameRules";
 
 export const updateBoard = drawBoard(20, 10);
 
+export type GameSetter = (state: GameState) => GameState;
+
 const drawPiece = (piece: BoardPiece): DrawableAction[] =>
   drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
 
@@ -110,7 +112,7 @@ const rotationBlocked = (piece: BoardPiece): boolean => {
   return checkBoundary(newPiece, action => action.x >= board[0].length);
 };
 
-export const rotatePiece = (state: GameState): GameState =>
+export const rotatePiece: GameSetter = state =>
   !rotationBlocked(state.piece)
     ? {
         ...state,
@@ -118,7 +120,7 @@ export const rotatePiece = (state: GameState): GameState =>
       }
     : state;
 
-const endPieceMovement = (state: GameState): GameState => {
+const endPieceMovement: GameSetter = state => {
   const lines = state.lines.concat(drawPiece(state.piece));
   const fullRows = findFullRows(lines);
   return fullRows.length > 0
@@ -136,7 +138,7 @@ const endPieceMovement = (state: GameState): GameState => {
       };
 };
 
-const decrementTetrisCycle = (state: GameState): GameState => ({
+const decrementTetrisCycle: GameSetter = state => ({
   ...state,
   tetrisCycle: state.tetrisCycle - 1
 });
@@ -159,7 +161,7 @@ const endTetrisCycle = (rules: GameRules, state: GameState): GameState => {
   };
 };
 
-const incrementYPos = (state: GameState): GameState => ({
+const incrementYPos: GameSetter = state => ({
   ...state,
   piece: {
     ...state.piece,
@@ -167,9 +169,9 @@ const incrementYPos = (state: GameState): GameState => ({
   }
 });
 
-export const gameCycle = (rules: GameRules) => (
-  state: GameState
-): GameState => {
+export type GameCycle = (rules: GameRules) => GameSetter;
+
+export const gameCycle: GameCycle = rules => (state): GameState => {
   const newState = incrementYPos(state);
 
   return state.tetrisLines.length > 0 && state.tetrisCycle > 0
@@ -183,28 +185,30 @@ export const gameCycle = (rules: GameRules) => (
     : state;
 };
 
-export const incrementScore = (state: GameState, value: number): GameState => ({
+type ScoreIncrement = (value: number) => GameSetter;
+
+export const incrementScore: ScoreIncrement = value => (state): GameState => ({
   ...state,
   score: state.score + value
 });
 
-export const startGame = (state: GameState): GameState => ({
+export const startGame: GameSetter = state => ({
   ...state,
   paused: false,
   started: true
 });
 
-export const pauseGame = (state: GameState): GameState => ({
+export const pauseGame: GameSetter = state => ({
   ...state,
   paused: true
 });
 
-export const resumeGame = (state: GameState): GameState => ({
+export const resumeGame: GameSetter = state => ({
   ...state,
   paused: false
 });
 
-export const moveDown = (state: GameState): GameState => {
+export const moveDown: GameSetter = state => {
   const newState = incrementYPos(state);
 
   return atBottom(state.piece) || didCollide(newState.piece, state)
@@ -212,7 +216,7 @@ export const moveDown = (state: GameState): GameState => {
     : newState;
 };
 
-export const moveRight = (state: GameState): GameState => {
+export const moveRight: GameSetter = state => {
   const newState = {
     ...state,
     piece: {
@@ -226,7 +230,7 @@ export const moveRight = (state: GameState): GameState => {
     : newState;
 };
 
-export const moveLeft = (state: GameState): GameState => {
+export const moveLeft: GameSetter = state => {
   const newState = {
     ...state,
     piece: {

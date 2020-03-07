@@ -35,17 +35,14 @@ const GameStore = React.createContext<GameStore>([
 ]);
 
 const gameActions = (setState: GameStateSetter): GameActions => ({
-  startGame: (): void => {
-    setState(state => startGame(state));
-  },
-  incrementScore: (value: number): void =>
-    setState(state => incrementScore(state, value)),
-  pauseGame: (): void => setState(state => pauseGame(state)),
-  resumeGame: (): void => setState(state => resumeGame(state)),
-  moveDown: (): void => setState(state => moveDown(state)),
-  moveRight: (): void => setState(state => moveRight(state)),
-  moveLeft: (): void => setState(state => moveLeft(state)),
-  rotatePiece: (): void => setState(state => rotatePiece(state))
+  startGame: (): void => setState(startGame),
+  incrementScore: (value): void => setState(incrementScore(value)),
+  pauseGame: (): void => setState(pauseGame),
+  resumeGame: (): void => setState(resumeGame),
+  moveDown: (): void => setState(moveDown),
+  moveRight: (): void => setState(moveRight),
+  moveLeft: (): void => setState(moveLeft),
+  rotatePiece: (): void => setState(rotatePiece)
 });
 
 export const GameProvider: React.FC = ({ children }) => {
