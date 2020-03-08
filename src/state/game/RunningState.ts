@@ -1,3 +1,5 @@
-import { GameReducer } from "./types";
+import { GameReducer, GameActions } from "./types";
+import { startTransform } from "./StartState";
 
-export const runningReducer: GameReducer = (state, action) => state;
+export const runningReducer: GameReducer = (state, { type }) =>
+  type === GameActions.startGame ? startTransform(state) : state;
