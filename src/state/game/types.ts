@@ -1,11 +1,3 @@
-export enum GameStates {
-  initialized,
-  running,
-  paused,
-  levelingUp,
-  ended
-}
-
 export enum GameActions {
   incrementScore,
   pauseGame,
@@ -17,9 +9,8 @@ export enum GameActions {
   rotatePiece
 }
 
-export type InitializedState = {
-  state: GameStates;
-  next: GameReducer;
+export type BaseState = {
+  nextCycle: GameReducer;
 };
 
 export type ScoreState = {
@@ -32,9 +23,7 @@ export type GameActionTypes =
   | { type: GameActions }
   | { type: GameActions.incrementScore; value: number };
 
-export type GameState = InitializedState & {
-  score?: ScoreState;
-};
+export type GameState = BaseState & ScoreState;
 
 export type GameReducer = (
   state: GameState,

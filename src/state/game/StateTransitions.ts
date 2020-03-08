@@ -1,8 +1,12 @@
-import { GameStates, GameReducer, GameActions } from "./types";
+import { GameReducer, GameActions } from "./types";
 import { runningReducer } from "./RunningState";
+import { startReducer } from "./StartState";
 
-export const stateTransition: GameReducer = ({ state, ...rest }, { type }) => {
-  return state === GameStates.initialized && type === GameActions.startGame
-    ? { ...rest, state: GameStates.running, next: runningReducer }
-    : { ...rest, state };
+export const stateTransition: GameReducer = (
+  { nextCycle: next, ...rest },
+  { type }
+) => {
+  return next === startReducer && type === GameActions.startGame
+    ? { ...rest, nextCycle: runningReducer }
+    : { ...rest, nextCycle: next };
 };

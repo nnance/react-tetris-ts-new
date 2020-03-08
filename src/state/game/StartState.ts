@@ -11,4 +11,4 @@ export const startGame = (): GameActionTypes => ({
 });
 
 export const startReducer: GameReducer = (state, { type }) =>
-  type === GameActions.startGame ? { ...state, score: initialState() } : state;
+  type === GameActions.startGame ? { ...state, ...initialState() } : state;
