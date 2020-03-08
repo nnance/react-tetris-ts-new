@@ -1,15 +1,12 @@
 import { startGame, startReducer } from "./StartState";
-import { GameState, GameStates } from "./types";
+import { GameStates, InitializedState } from "./types";
 
 describe("when creating a new game", () => {
-  const state: GameState = {
-    level: 10,
-    lineCount: 0,
-    next: startReducer,
-    score: 10,
-    state: GameStates.initialized
+  const state: InitializedState = {
+    state: GameStates.initialized,
+    next: startReducer
   };
   it("should set game defaults", () => {
-    expect(startReducer(state, startGame()).level).toEqual(1);
+    expect(startReducer(state, startGame()).score?.level).toEqual(1);
   });
 });

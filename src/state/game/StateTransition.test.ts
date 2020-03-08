@@ -1,18 +1,17 @@
 import { startGame, startReducer } from "./StartState";
 import { GameState, GameStates } from "./types";
 import { stateTransition } from "./StateTransitions";
+import { runningReducer } from "./RunningState";
 
 describe("when starting a new game", () => {
   const state: GameState = {
-    level: 10,
-    lineCount: 0,
     next: startReducer,
-    score: 10,
-    state: GameStates.initialized
+    state: GameStates.initialized,
+    score: { score: 10, level: 10, lineCount: 0 }
   };
   it("should transition to running state", () => {
-    expect(stateTransition(state, startGame()).state).toEqual(
-      GameStates.running
-    );
+    const newState = stateTransition(state, startGame());
+    expect(newState.state).toEqual(GameStates.running);
+    expect(newState.next).toEqual(runningReducer);
   });
 });

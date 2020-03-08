@@ -22,17 +22,19 @@ export type InitializedState = {
   next: GameReducer;
 };
 
-export type StartState = {
+export type ScoreState = {
   score: number;
   level: number;
   lineCount: number;
 };
 
-export type GameState = InitializedState & StartState;
-
 export type GameActionTypes =
   | { type: GameActions }
   | { type: GameActions.incrementScore; value: number };
+
+export type GameState = InitializedState & {
+  score?: ScoreState;
+};
 
 export type GameReducer = (
   state: GameState,

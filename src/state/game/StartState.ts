@@ -1,6 +1,6 @@
-import { GameReducer, GameActions, StartState, GameActionTypes } from "./types";
+import { GameActions, GameActionTypes, GameReducer, ScoreState } from "./types";
 
-export const initialState = (): StartState => ({
+export const initialState = (): ScoreState => ({
   score: 0,
   level: 1,
   lineCount: 0
@@ -10,7 +10,5 @@ export const startGame = (): GameActionTypes => ({
   type: GameActions.startGame
 });
 
-export const startReducer: GameReducer = (state, action) =>
-  action.type === GameActions.startGame
-    ? { ...state, ...initialState() }
-    : state;
+export const startReducer: GameReducer = (state, { type }) =>
+  type === GameActions.startGame ? { ...state, score: initialState() } : state;

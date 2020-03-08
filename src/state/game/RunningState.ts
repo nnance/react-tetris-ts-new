@@ -1,3 +1,3 @@
 import { GameReducer } from "./types";
 
-export const runningState: GameReducer = (state, action) => state;
+export const runningReducer: GameReducer = (state, action) => state;
