@@ -9,10 +9,10 @@ import {
 export const runningReducer: GameReducer = (state, { type }) =>
   type === GameActions.startGame
     ? startTransform(state)
-    : GameActions.moveDown
+    : type === GameActions.moveDown
     ? incrementYPos(state)
-    : GameActions.moveRight
+    : type === GameActions.moveRight
     ? incrementXPos(state)
-    : GameActions.moveLeft
+    : type === GameActions.moveLeft
     ? decrementXPos(state)
     : state;

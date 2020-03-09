@@ -1,6 +1,5 @@
 import React from "react";
 import { GameState, GameActionTypes } from "./game/types";
-import { basicRules } from "./GameRules";
 import useInterval from "../hooks/useInterval";
 import { startReducer } from "./game/StartState";
 import { gameFieldState, initialState } from "./game/transforms";
