@@ -3,12 +3,13 @@ import { GameState } from "./types";
 import { stateTransition } from "./StateTransitions";
 import { runningReducer } from "./RunningState";
 import { startGame } from "./actions";
-import { initialState } from "./transforms";
+import { initialState, gameFieldState } from "./transforms";
 
 describe("when starting a new game", () => {
   const state: GameState = {
     nextCycle: startReducer,
-    ...initialState()
+    ...initialState(),
+    ...gameFieldState()
   };
   it("should transition to running state", () => {
     const newState = stateTransition(state, startGame());

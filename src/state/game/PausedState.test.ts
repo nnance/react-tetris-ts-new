@@ -1,12 +1,13 @@
 import { GameState } from "./types";
 import { pausedReducer } from "./PausedState";
 import { startGame } from "./actions";
-import { initialState } from "./transforms";
+import { initialState, gameFieldState } from "./transforms";
 
 describe("when game is paused", () => {
   const state: GameState = {
     nextCycle: pausedReducer,
     ...initialState(),
+    ...gameFieldState(),
     level: 10
   };
   it("should reset game on start game", () => {

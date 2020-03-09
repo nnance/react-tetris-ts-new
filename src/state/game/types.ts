@@ -1,3 +1,5 @@
+import { BoardPiece, Piece, DrawableAction } from "../../components/drawing";
+
 export enum GameActions {
   incrementScore,
   pauseGame,
@@ -19,11 +21,18 @@ export type ScoreState = {
   lineCount: number;
 };
 
+export type GameFieldState = {
+  piece: BoardPiece;
+  next: Piece;
+  lines: DrawableAction[];
+  gravity: number;
+};
+
 export type GameActionTypes =
   | { type: GameActions }
   | { type: GameActions.incrementScore; value: number };
 
-export type GameState = BaseState & ScoreState;
+export type GameState = BaseState & ScoreState & GameFieldState;
 
 export type GameReducer = (
   state: GameState,

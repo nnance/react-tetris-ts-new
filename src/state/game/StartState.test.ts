@@ -1,14 +1,15 @@
 import { startReducer } from "./StartState";
 import { GameState } from "./types";
 import { startGame } from "./actions";
-import { initialState } from "./transforms";
+import { initialState, gameFieldState } from "./transforms";
 
 describe("when creating a new game", () => {
   const state: GameState = {
     nextCycle: startReducer,
-    ...initialState()
+    ...initialState(),
+    ...gameFieldState()
   };
-  it("should set game defaults", () => {
+  it("should reset game on start game", () => {
     expect(startReducer(state, startGame()).level).toEqual(1);
   });
 });
