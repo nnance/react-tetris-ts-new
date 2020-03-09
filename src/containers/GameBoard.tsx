@@ -8,6 +8,9 @@ import NextPiece from "../components/NextPiece";
 import useTheme from "../hooks/useTheme";
 import useGameControls from "../hooks/useGameControls";
 import useFPS from "../hooks/useFPS";
+import { startGame, pauseGame, resumeGame } from "../state/game/actions";
+import { pausedReducer } from "../state/game/PausedState";
+import { runningReducer } from "../state/game/RunningState";
 
 const PlayFieldContainer: React.FC = () => {
   const [game] = React.useContext(GameStore);
@@ -15,7 +18,7 @@ const PlayFieldContainer: React.FC = () => {
   return (
     <PlayField
       piece={game.piece}
-      started={game.started}
+      started={game.nextCycle === runningReducer}
       boardLines={game.lines}
     />
   );
@@ -40,13 +43,13 @@ export default function GameBoardContainer(): React.ReactElement {
   return (
     <GameProvider>
       <GameStore.Consumer>
-        {([game, actions]): React.ReactElement => (
+        {([game, dispatch]): React.ReactElement => (
           <Container theme={theme}>
             <Header
-              startHandler={actions.startGame}
-              pauseHandler={actions.pauseGame}
-              resumeHandler={actions.resumeGame}
-              isPaused={game.paused}
+              startHandler={(): void => dispatch(startGame())}
+              pauseHandler={(): void => dispatch(pauseGame())}
+              resumeHandler={(): void => dispatch(resumeGame())}
+              isPaused={game.nextCycle === pausedReducer}
             />
             <div className="row">
               <StatusContainer />

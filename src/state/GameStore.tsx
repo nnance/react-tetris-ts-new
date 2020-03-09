@@ -1,60 +1,31 @@
 import React from "react";
-import {
-  pickNewPiece,
-  pieceToBoardPiece,
-  startGame,
-  gameCycle,
-  incrementScore,
-  pauseGame,
-  resumeGame,
-  moveDown,
-  moveRight,
-  moveLeft,
-  rotatePiece
-} from "./GameActions";
-import { GameState, GameActions, GameStateSetter } from "../types";
-import { initialScoreState, basicRules } from "./GameRules";
+import { GameState, GameActionTypes } from "./game/types";
+import { basicRules } from "./GameRules";
 import useInterval from "../hooks/useInterval";
+import { startReducer } from "./game/StartState";
+import { gameFieldState, initialState } from "./game/transforms";
+import { gameReducer } from "./game/GameReducer";
+import { moveDown } from "./game/actions";
 
-const initialState: GameState = {
-  piece: pieceToBoardPiece(pickNewPiece()),
-  next: pickNewPiece(),
-  paused: true,
-  started: false,
-  lines: [],
-  tetrisLines: [],
-  tetrisCycle: 0,
-  ...initialScoreState
+type GameStore = [GameState, React.Dispatch<GameActionTypes>];
+
+const initState: GameState = {
+  nextCycle: startReducer,
+  ...initialState(),
+  ...gameFieldState()
 };
 
-type GameStore = [GameState, GameActions];
-
-const GameStore = React.createContext<GameStore>([
-  initialState,
-  {} as GameActions
-]);
-
-const gameActions = (setState: GameStateSetter): GameActions => ({
-  startGame: (): void => setState(startGame),
-  incrementScore: (value): void => setState(incrementScore(value)),
-  pauseGame: (): void => setState(pauseGame),
-  resumeGame: (): void => setState(resumeGame),
-  moveDown: (): void => setState(moveDown),
-  moveRight: (): void => setState(moveRight),
-  moveLeft: (): void => setState(moveLeft),
-  rotatePiece: (): void => setState(rotatePiece)
-});
+const initDispatcher = (action: GameActionTypes): GameState => initState;
+const GameStore = React.createContext<GameStore>([initState, initDispatcher]);
 
 export const GameProvider: React.FC = ({ children }) => {
-  const [state, setState] = React.useState(initialState);
-  useInterval(
-    () => setState(state => gameCycle(basicRules)(state)),
-    state.gravity
-  );
-  const actions = gameActions(setState);
+  const [state, dispatch] = React.useReducer(gameReducer, initState);
+  useInterval(() => dispatch(moveDown()), state.gravity);
 
   return (
-    <GameStore.Provider value={[state, actions]}>{children}</GameStore.Provider>
+    <GameStore.Provider value={[state, dispatch]}>
+      {children}
+    </GameStore.Provider>
   );
 };
 

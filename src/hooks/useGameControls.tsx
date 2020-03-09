@@ -1,6 +1,7 @@
 import React from "react";
 import GameStore from "../state/GameStore";
-import { GameActions } from "../types";
+import { GameActionTypes } from "../state/game/types";
+import { moveRight, moveLeft, moveDown } from "../state/game/actions";
 
 enum KeyCode {
   spaceBar = 32,
@@ -10,18 +11,18 @@ enum KeyCode {
   downArrow = 40
 }
 
-const handler = (actions: GameActions) => ({
+const handler = (dispatch: React.Dispatch<GameActionTypes>) => ({
   keyCode
 }: KeyboardEvent): void => {
-  if (keyCode === KeyCode.rightArrow) actions.moveRight();
-  else if (keyCode === KeyCode.leftArrow) actions.moveLeft();
-  else if (keyCode === KeyCode.upArrow) actions.rotatePiece();
-  else if (keyCode === KeyCode.downArrow) actions.moveDown();
+  if (keyCode === KeyCode.rightArrow) dispatch(moveRight());
+  else if (keyCode === KeyCode.leftArrow) dispatch(moveLeft());
+  // else if (keyCode === KeyCode.upArrow) dispatch(rotatePiece());
+  else if (keyCode === KeyCode.downArrow) dispatch(moveDown());
 };
 
 const useGameControls = (): void => {
-  const [, actions] = React.useContext(GameStore);
-  const downHandler = handler(actions);
+  const [, dispatch] = React.useContext(GameStore);
+  const downHandler = handler(dispatch);
 
   React.useEffect(() => {
     window.addEventListener("keydown", downHandler);

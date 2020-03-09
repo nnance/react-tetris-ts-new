@@ -11,7 +11,7 @@ export const gameFieldState = (): GameFieldState => ({
   piece: pieceToBoardPiece(pickNewPiece()),
   next: pickNewPiece(),
   lines: [],
-  gravity: 0
+  gravity: 500
 });
 
 export const startTransform = ({ nextCycle }: GameState): GameState => ({
