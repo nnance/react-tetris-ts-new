@@ -1,5 +1,7 @@
-import { startGameAction, startReducer, initialState } from "./StartState";
+import { startReducer } from "./StartState";
 import { GameState } from "./types";
+import { startGame } from "./actions";
+import { initialState } from "./transforms";
 
 describe("when creating a new game", () => {
   const state: GameState = {
@@ -7,6 +9,6 @@ describe("when creating a new game", () => {
     ...initialState()
   };
   it("should set game defaults", () => {
-    expect(startReducer(state, startGameAction()).level).toEqual(1);
+    expect(startReducer(state, startGame()).level).toEqual(1);
   });
 });

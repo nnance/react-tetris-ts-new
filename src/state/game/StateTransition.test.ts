@@ -1,7 +1,9 @@
-import { startGameAction, startReducer, initialState } from "./StartState";
+import { startReducer } from "./StartState";
 import { GameState } from "./types";
 import { stateTransition } from "./StateTransitions";
 import { runningReducer } from "./RunningState";
+import { startGame } from "./actions";
+import { initialState } from "./transforms";
 
 describe("when starting a new game", () => {
   const state: GameState = {
@@ -9,7 +11,7 @@ describe("when starting a new game", () => {
     ...initialState()
   };
   it("should transition to running state", () => {
-    const newState = stateTransition(state, startGameAction());
+    const newState = stateTransition(state, startGame());
     expect(newState.nextCycle).toEqual(runningReducer);
   });
 });

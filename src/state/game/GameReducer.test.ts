@@ -1,7 +1,10 @@
 import { gameReducer } from "./GameReducer";
 import { GameState } from "./types";
-import { startReducer, initialState, startGameAction } from "./StartState";
+import { startReducer } from "./StartState";
 import { runningReducer } from "./RunningState";
+import { startGame, resumeGame, pauseGame } from "./actions";
+import { initialState } from "./transforms";
+import { pausedReducer } from "./PausedState";
 
 describe("when starting a new game", () => {
   const state: GameState = {
@@ -9,9 +12,7 @@ describe("when starting a new game", () => {
     ...initialState()
   };
   it("should transition to running state", () => {
-    expect(gameReducer(state, startGameAction()).nextCycle).toEqual(
-      runningReducer
-    );
+    expect(gameReducer(state, startGame()).nextCycle).toEqual(runningReducer);
   });
 });
 
@@ -23,6 +24,19 @@ describe("when game is running", () => {
     lineCount: 100
   };
   it("should reset game on start game", () => {
-    expect(gameReducer(state, startGameAction()).level).toEqual(1);
+    expect(gameReducer(state, startGame()).level).toEqual(1);
+  });
+  it("should transition to paused when pause game", () => {
+    expect(gameReducer(state, pauseGame()).nextCycle).toEqual(pausedReducer);
+  });
+});
+
+describe("when game is paused", () => {
+  const state: GameState = {
+    nextCycle: pausedReducer,
+    ...initialState()
+  };
+  it("should transition to running when resumed", () => {
+    expect(gameReducer(state, resumeGame()).nextCycle).toEqual(runningReducer);
   });
 });

@@ -1,6 +1,6 @@
 import { GameState } from "./types";
-import { startGameAction } from "./StartState";
 import { runningReducer } from "./RunningState";
+import { startGame } from "./actions";
 
 describe("when game is running", () => {
   const state: GameState = {
@@ -10,6 +10,6 @@ describe("when game is running", () => {
     lineCount: 100
   };
   it("should reset game on start game", () => {
-    expect(runningReducer(state, startGameAction()).level).toEqual(1);
+    expect(runningReducer(state, startGame()).level).toEqual(1);
   });
 });
