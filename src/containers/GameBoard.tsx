@@ -10,7 +10,7 @@ import useGameControls from "../hooks/useGameControls";
 import useFPS from "../hooks/useFPS";
 import { startGame, pauseGame, resumeGame } from "../state/game/actions";
 import { pausedReducer } from "../state/game/PausedState";
-import { runningReducer } from "../state/game/RunningState";
+import { startReducer } from "../state/game/StartState";
 
 const PlayFieldContainer: React.FC = () => {
   const [game] = React.useContext(GameStore);
@@ -18,7 +18,7 @@ const PlayFieldContainer: React.FC = () => {
   return (
     <PlayField
       piece={game.piece}
-      started={game.nextCycle === runningReducer}
+      started={game.nextCycle !== startReducer}
       boardLines={game.lines}
     />
   );
