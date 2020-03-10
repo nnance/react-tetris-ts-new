@@ -4,7 +4,8 @@ import {
   BoardPiece,
   BlockState,
   DrawableAction,
-  drawBlock
+  drawBlock,
+  DrawableGrid
 } from "../../components/drawing";
 
 type BoundaryPredicate = (action: DrawableAction) => boolean;
@@ -36,24 +37,31 @@ const checkBoundary = (
   predicate: BoundaryPredicate
 ): boolean => drawPiece(piece).find(predicate) !== undefined;
 
-const didCollide = (piece: BoardPiece, lines: DrawableAction[]): boolean => {
-  const newBoard = updateBoard(lines);
-  return checkBoundary(
-    piece,
-    action => newBoard[action.y][action.x] === BlockState.on
+const didCollide = (piece: BoardPiece, board: DrawableGrid): boolean =>
+  checkBoundary(piece, action => board[action.y][action.x] === BlockState.on);
+
+export const atBottom = ({ piece, lines }: GameState): boolean => {
+  const board = updateBoard(lines);
+  return (
+    didCollide(piece, board) ||
+    checkBoundary(piece, action => action.y >= board.length - 1)
   );
 };
 
-const atBottom = ({ piece, lines }: GameState): boolean =>
-  didCollide(piece, lines) ||
-  checkBoundary(piece, action => action.y >= updateBoard([]).length - 1);
+const atLeft = ({ piece, lines }: GameState): boolean => {
+  const board = updateBoard(lines);
+  return (
+    didCollide(piece, board) || checkBoundary(piece, action => action.x === 0)
+  );
+};
 
-const atLeft = ({ piece, lines }: GameState): boolean =>
-  didCollide(piece, lines) || checkBoundary(piece, action => action.x === 0);
-
-const atRight = ({ piece, lines }: GameState): boolean =>
-  didCollide(piece, lines) ||
-  checkBoundary(piece, action => action.x >= updateBoard([])[0].length - 1);
+const atRight = ({ piece, lines }: GameState): boolean => {
+  const board = updateBoard(lines);
+  return (
+    didCollide(piece, board) ||
+    checkBoundary(piece, action => action.x >= board[0].length - 1)
+  );
+};
 
 export const incrementYPos = (state: GameState): GameState =>
   atBottom(state)
