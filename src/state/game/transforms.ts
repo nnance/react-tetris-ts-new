@@ -4,8 +4,7 @@ import {
   BoardPiece,
   BlockState,
   DrawableAction,
-  drawBlock,
-  DrawableGrid
+  drawBlock
 } from "../../components/drawing";
 
 type BoundaryPredicate = (action: DrawableAction) => boolean;
@@ -37,61 +36,54 @@ const checkBoundary = (
   predicate: BoundaryPredicate
 ): boolean => drawPiece(piece).find(predicate) !== undefined;
 
-const didCollide = (piece: BoardPiece, board: DrawableGrid): boolean =>
-  checkBoundary(piece, action => board[action.y][action.x] === BlockState.on);
+export const atBottom = (piece: BoardPiece): boolean =>
+  checkBoundary(piece, action => action.y >= updateBoard([]).length - 1);
 
-export const atBottom = ({ piece, lines }: GameState): boolean => {
-  const board = updateBoard(lines);
-  return (
-    didCollide(piece, board) ||
-    checkBoundary(piece, action => action.y >= board.length - 1)
+export const atLeft = (piece: BoardPiece): boolean =>
+  checkBoundary(piece, action => action.x === 0);
+
+export const atRight = (piece: BoardPiece): boolean =>
+  checkBoundary(piece, action => action.x >= updateBoard([])[0].length - 1);
+
+export const didCollide = ({ piece, lines }: GameState): boolean => {
+  const newBoard = updateBoard(lines);
+  return checkBoundary(
+    piece,
+    action => newBoard[action.y][action.x] === BlockState.on
   );
 };
 
-const atLeft = ({ piece, lines }: GameState): boolean => {
-  const board = updateBoard(lines);
-  return (
-    didCollide(piece, board) || checkBoundary(piece, action => action.x === 0)
-  );
+export const incrementYPos = (state: GameState): GameState => {
+  const newState = {
+    ...state,
+    piece: {
+      ...state.piece,
+      pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
+    }
+  };
+  return atBottom(state.piece) || didCollide(newState) ? state : newState;
 };
 
-const atRight = ({ piece, lines }: GameState): boolean => {
-  const board = updateBoard(lines);
-  return (
-    didCollide(piece, board) ||
-    checkBoundary(piece, action => action.x >= board[0].length - 1)
-  );
+export const incrementXPos = (state: GameState): GameState => {
+  const newState = {
+    ...state,
+    piece: {
+      ...state.piece,
+      pos: { ...state.piece.pos, x: state.piece.pos.x + 1 }
+    }
+  };
+
+  return atRight(state.piece) || didCollide(newState) ? state : newState;
 };
 
-export const incrementYPos = (state: GameState): GameState =>
-  atBottom(state)
-    ? state
-    : {
-        ...state,
-        piece: {
-          ...state.piece,
-          pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
-        }
-      };
+export const decrementXPos = (state: GameState): GameState => {
+  const newState = {
+    ...state,
+    piece: {
+      ...state.piece,
+      pos: { ...state.piece.pos, x: state.piece.pos.x - 1 }
+    }
+  };
 
-export const incrementXPos = (state: GameState): GameState =>
-  atRight(state)
-    ? state
-    : {
-        ...state,
-        piece: {
-          ...state.piece,
-          pos: { ...state.piece.pos, x: state.piece.pos.x + 1 }
-        }
-      };
-
-export const decrementXPos = (state: GameState): GameState =>
-  atLeft(state)
-    ? state
-    : {
-        ...state,
-        piece: {
-          ...state.piece,
-          pos: { ...state.piece.pos, x: state.piece.pos.x - 1 }
-        }
-      };
+  return atLeft(state.piece) || didCollide(newState) ? state : newState;
+};

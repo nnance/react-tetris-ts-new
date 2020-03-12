@@ -9,7 +9,7 @@ const stateTransition: GameReducer = ({ nextCycle, ...rest }, { type }) => {
     ? { ...rest, nextCycle: runningReducer }
     : nextCycle === runningReducer && type === GameActions.pauseGame
     ? { ...rest, nextCycle: pausedReducer }
-    : nextCycle === runningReducer && atBottom({ nextCycle, ...rest })
+    : nextCycle === runningReducer && atBottom(rest.piece)
     ? { ...rest, nextCycle: turnOverReducer }
     : nextCycle === pausedReducer && type === GameActions.resumeGame
     ? { ...rest, nextCycle: runningReducer }

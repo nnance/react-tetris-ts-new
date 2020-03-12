@@ -2,7 +2,6 @@ import { decrementXPos, incrementXPos, incrementYPos } from "./transforms";
 import { OBlock, IBlock } from "../../components/blocks";
 import { GameState } from "./types";
 import { drawBlock } from "../../components/drawing";
-import { basicRules } from "../GameRules";
 import { initialState as gameState } from "./transforms";
 import { runningReducer } from "./RunningState";
 import { pieceToBoardPiece } from "../GameActions";

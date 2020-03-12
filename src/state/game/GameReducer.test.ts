@@ -2,9 +2,21 @@ import { gameReducer } from "./GameReducer";
 import { GameState } from "./types";
 import { startReducer } from "./StartState";
 import { runningReducer } from "./RunningState";
-import { startGame, resumeGame, pauseGame } from "./actions";
-import { initialState, gameFieldState } from "./transforms";
+import { startGame, resumeGame, pauseGame, moveDown } from "./actions";
+import { initialState, gameFieldState, incrementYPos } from "./transforms";
 import { pausedReducer } from "./PausedState";
+import { turnOverReducer } from "./TurnOverState";
+
+const moveTimes = (
+  count: number,
+  movement: (state: GameState) => GameState
+) => (state: GameState): GameState => {
+  return Array(count)
+    .fill(movement)
+    .reduce((prev, cur) => cur(prev), state);
+};
+
+const moveDown25Times = moveTimes(25, incrementYPos);
 
 describe("when starting a new game", () => {
   const state: GameState = {
@@ -25,6 +37,11 @@ describe("when game is running", () => {
   };
   it("should transition to paused when pause game", () => {
     expect(gameReducer(state, pauseGame()).nextCycle).toEqual(pausedReducer);
+  });
+  it("should transition to turn over when reached bottom", () => {
+    expect(gameReducer(moveDown25Times(state), moveDown()).nextCycle).toEqual(
+      turnOverReducer
+    );
   });
 });
 
