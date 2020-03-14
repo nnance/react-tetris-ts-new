@@ -23,3 +23,7 @@ export const moveRight = (): GameActionTypes => ({
 export const moveLeft = (): GameActionTypes => ({
   type: GameActions.moveLeft
 });
+
+export const gameCycle = (): GameActionTypes => ({
+  type: GameActions.gameCycle
+});

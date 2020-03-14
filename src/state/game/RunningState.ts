@@ -88,6 +88,8 @@ export const runningReducer: GameReducer = (state, { type }) =>
     ? decrementXPos(state)
     : type === GameActions.pauseGame
     ? pauseTransform(state)
+    : type === GameActions.gameCycle
+    ? incrementYPos(state)
     : state;
 
 export const runningTransform = (state: GameState): GameState => ({

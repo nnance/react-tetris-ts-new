@@ -51,4 +51,4 @@ const endPieceMovement = (state: GameState): GameState => {
 };
 
 export const endTurnReducer: GameReducer = (state, { type }) =>
-  type === GameActions.moveDown ? endPieceMovement(state) : state;
+  type === GameActions.gameCycle ? endPieceMovement(state) : state;

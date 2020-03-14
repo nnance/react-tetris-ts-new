@@ -8,7 +8,8 @@ export enum GameActions {
   moveDown,
   moveRight,
   moveLeft,
-  rotatePiece
+  rotatePiece,
+  gameCycle
 }
 
 export type BaseState = {

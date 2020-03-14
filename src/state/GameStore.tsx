@@ -1,7 +1,7 @@
 import React from "react";
 import { GameState, GameActionTypes } from "./game/types";
 import useInterval from "../hooks/useInterval";
-import { moveDown } from "./game/actions";
+import { gameCycle } from "./game/actions";
 import { startReducer, gameFieldState, initialState } from "./game/StartState";
 
 // TODO: implement next cycle action
@@ -22,7 +22,7 @@ const GameStore = React.createContext<GameStore>([initState, initDispatcher]);
 
 export const GameProvider: React.FC = ({ children }) => {
   const [state, dispatch] = React.useReducer(gameReducer, initState);
-  useInterval(() => dispatch(moveDown()), state.gravity);
+  useInterval(() => dispatch(gameCycle()), state.gravity);
 
   return (
     <GameStore.Provider value={[state, dispatch]}>

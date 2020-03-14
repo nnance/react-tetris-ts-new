@@ -1,5 +1,5 @@
 import { OBlock, IBlock } from "../../components/blocks";
-import { moveDown } from "./actions";
+import { gameCycle } from "./actions";
 import { drawBlock } from "../../components/drawing";
 import { endTurnReducer } from "./EndTurnState";
 import { startState, moveDown25Times } from "./testingHelpers";
@@ -10,6 +10,6 @@ describe("when turn is over", () => {
       ...startState,
       lines: drawBlock(0, 19, IBlock[1])
     });
-    expect(endTurnReducer(state, moveDown()).next).not.toEqual(OBlock);
+    expect(endTurnReducer(state, gameCycle()).next).not.toEqual(OBlock);
   });
 });
