@@ -4,6 +4,8 @@ import useInterval from "../hooks/useInterval";
 import { moveDown } from "./game/actions";
 import { startReducer, gameFieldState, initialState } from "./game/StartState";
 
+// TODO: implement next cycle action
+
 type GameStore = [GameState, React.Dispatch<GameActionTypes>];
 
 const initState: GameState = {

@@ -1,5 +1,5 @@
 import { GameReducer, GameActions, GameState } from "./types";
-import { pausedReducer } from "./PausedState";
+import { pauseTransform } from "./PausedState";
 import { startTransform } from "./StartState";
 import {
   BoardPiece,
@@ -8,7 +8,9 @@ import {
   BlockState
 } from "../../components/drawing";
 import { updateBoard } from "../GameActions";
-import { turnOverReducer } from "./TurnOverState";
+import { endTurnReducer } from "./EndTurnState";
+
+// TODO: implement piece rotation
 
 type BoundaryPredicate = (action: DrawableAction) => boolean;
 
@@ -45,7 +47,7 @@ const incrementYPos = (state: GameState): GameState => {
       pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
     }
   };
-  const newTransition = { ...state, nextCycle: turnOverReducer };
+  const newTransition = { ...state, nextCycle: endTurnReducer };
   return atBottom(state.piece) || didCollide(newState)
     ? newTransition
     : newState;
@@ -75,11 +77,6 @@ const decrementXPos = (state: GameState): GameState => {
   return atLeft(state.piece) || didCollide(newState) ? state : newState;
 };
 
-export const runningTransform = (state: GameState): GameState => ({
-  ...state,
-  nextCycle: runningReducer
-});
-
 export const runningReducer: GameReducer = (state, { type }) =>
   type === GameActions.startGame
     ? startTransform()
@@ -90,5 +87,10 @@ export const runningReducer: GameReducer = (state, { type }) =>
     : type === GameActions.moveLeft
     ? decrementXPos(state)
     : type === GameActions.pauseGame
-    ? { ...state, nextCycle: pausedReducer }
+    ? pauseTransform(state)
     : state;
+
+export const runningTransform = (state: GameState): GameState => ({
+  ...state,
+  nextCycle: runningReducer
+});
