@@ -5,6 +5,7 @@ import { drawBlock } from "../../components/drawing";
 import { initialState as gameState } from "./transforms";
 import { runningReducer } from "./RunningState";
 import { pieceToBoardPiece } from "../GameActions";
+import { turnOverReducer } from "./TurnOverState";
 
 const initialState: GameState = {
   nextCycle: runningReducer,
@@ -64,5 +65,12 @@ describe("when moving down", () => {
   it("should stop when it collides", () => {
     const state = { ...initialState, lines: drawBlock(0, 2, IBlock[1]) };
     expect(incrementYPos(state).piece.pos.y).toBe(0);
+  });
+  it("should be at the bottom if it collides", () => {
+    const state = incrementYPos({
+      ...initialState,
+      lines: drawBlock(0, 2, IBlock[1])
+    });
+    expect(state.nextCycle).toEqual(turnOverReducer);
   });
 });

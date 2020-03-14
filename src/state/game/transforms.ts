@@ -6,6 +6,8 @@ import {
   DrawableAction,
   drawBlock
 } from "../../components/drawing";
+import { turnOverReducer } from "./TurnOverState";
+import { runningReducer } from "./RunningState";
 
 type BoundaryPredicate = (action: DrawableAction) => boolean;
 
@@ -23,9 +25,9 @@ export const gameFieldState = (): GameFieldState => ({
 });
 
 export const startTransform = ({ nextCycle }: GameState): GameState => ({
-  nextCycle,
   ...initialState(),
-  ...gameFieldState()
+  ...gameFieldState(),
+  nextCycle: runningReducer
 });
 
 const drawPiece = (piece: BoardPiece): DrawableAction[] =>
@@ -61,7 +63,10 @@ export const incrementYPos = (state: GameState): GameState => {
       pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
     }
   };
-  return atBottom(state.piece) || didCollide(newState) ? state : newState;
+  const newTransition = { ...state, nextCycle: turnOverReducer };
+  return atBottom(state.piece) || didCollide(newState)
+    ? newTransition
+    : newState;
 };
 
 export const incrementXPos = (state: GameState): GameState => {

@@ -5,6 +5,7 @@ import {
   incrementXPos,
   decrementXPos
 } from "./transforms";
+import { pausedReducer } from "./PausedState";
 
 export const runningReducer: GameReducer = (state, { type }) =>
   type === GameActions.startGame
@@ -15,4 +16,6 @@ export const runningReducer: GameReducer = (state, { type }) =>
     ? incrementXPos(state)
     : type === GameActions.moveLeft
     ? decrementXPos(state)
+    : type === GameActions.pauseGame
+    ? { ...state, nextCycle: pausedReducer }
     : state;
