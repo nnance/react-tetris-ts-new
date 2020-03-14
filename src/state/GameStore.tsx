@@ -1,9 +1,8 @@
 import React from "react";
 import { GameState, GameActionTypes } from "./game/types";
 import useInterval from "../hooks/useInterval";
-import { startReducer } from "./game/StartState";
-import { gameFieldState, initialState } from "./game/transforms";
 import { moveDown } from "./game/actions";
+import { startReducer, gameFieldState, initialState } from "./game/StartState";
 
 type GameStore = [GameState, React.Dispatch<GameActionTypes>];
 

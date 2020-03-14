@@ -1,10 +1,10 @@
 import { GameReducer, GameActions } from "./types";
-import { startTransform } from "./transforms";
-import { runningReducer } from "./RunningState";
+import { runningTransform } from "./RunningState";
+import { startTransform } from "./StartState";
 
 export const pausedReducer: GameReducer = (state, { type }) =>
   type === GameActions.startGame
-    ? startTransform(state)
+    ? startTransform()
     : type === GameActions.resumeGame
-    ? { ...state, nextCycle: runningReducer }
+    ? runningTransform(state)
     : state;

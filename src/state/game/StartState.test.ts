@@ -1,7 +1,6 @@
-import { startReducer } from "./StartState";
 import { GameState } from "./types";
 import { startGame } from "./actions";
-import { initialState, gameFieldState } from "./transforms";
+import { startReducer, initialState, gameFieldState } from "./StartState";
 
 describe("when creating a new game", () => {
   const state: GameState = {

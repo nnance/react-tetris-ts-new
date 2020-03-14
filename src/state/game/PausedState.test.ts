@@ -1,7 +1,7 @@
 import { GameState } from "./types";
 import { pausedReducer } from "./PausedState";
 import { startGame } from "./actions";
-import { initialState, gameFieldState } from "./transforms";
+import { initialState, gameFieldState } from "./StartState";
 import { runningReducer } from "./RunningState";
 
 describe("when game is paused", () => {
