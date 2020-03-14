@@ -8,11 +8,14 @@ import {
   BlockState
 } from "../../components/drawing";
 import { updateBoard } from "../GameActions";
-import { endTurnReducer } from "./EndTurnState";
+import { endTurnTransform } from "./EndTurnState";
 
 // TODO: implement piece rotation
 
 type BoundaryPredicate = (action: DrawableAction) => boolean;
+type StateTransform = (state: GameState) => GameState;
+
+const emptyBoard = updateBoard([]);
 
 const drawPiece = (piece: BoardPiece): DrawableAction[] =>
   drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
@@ -22,70 +25,67 @@ const checkBoundary = (
   predicate: BoundaryPredicate
 ): boolean => drawPiece(piece).find(predicate) !== undefined;
 
-const atBottom = (piece: BoardPiece): boolean =>
-  checkBoundary(piece, action => action.y >= updateBoard([]).length - 1);
+const atBottom = (action: DrawableAction): boolean =>
+  action.y >= emptyBoard.length;
 
-const atLeft = (piece: BoardPiece): boolean =>
-  checkBoundary(piece, action => action.x === 0);
+const atLeft = (action: DrawableAction): boolean => action.x < 0;
 
-const atRight = (piece: BoardPiece): boolean =>
-  checkBoundary(piece, action => action.x >= updateBoard([])[0].length - 1);
+const atRight = (action: DrawableAction): boolean =>
+  action.x >= emptyBoard[0].length;
 
-const didCollide = ({ piece, lines }: GameState): boolean => {
+const hitLine = (action: DrawableAction, lines: DrawableAction[]): boolean => {
   const newBoard = updateBoard(lines);
+  return newBoard[action.y][action.x] === BlockState.on;
+};
+
+const collide = (state: GameState, transform: StateTransform): boolean => {
+  const { lines, piece } = transform(state);
   return checkBoundary(
     piece,
-    action => newBoard[action.y][action.x] === BlockState.on
+    action =>
+      atLeft(action) ||
+      atRight(action) ||
+      atBottom(action) ||
+      hitLine(action, lines)
   );
 };
 
-const incrementYPos = (state: GameState): GameState => {
-  const newState = {
-    ...state,
-    piece: {
-      ...state.piece,
-      pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
-    }
-  };
-  const newTransition = { ...state, nextCycle: endTurnReducer };
-  return atBottom(state.piece) || didCollide(newState)
-    ? newTransition
-    : newState;
-};
+const incrementYPos = (state: GameState): GameState => ({
+  ...state,
+  piece: {
+    ...state.piece,
+    pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
+  }
+});
 
-const incrementXPos = (state: GameState): GameState => {
-  const newState = {
-    ...state,
-    piece: {
-      ...state.piece,
-      pos: { ...state.piece.pos, x: state.piece.pos.x + 1 }
-    }
-  };
+const incrementXPos = (state: GameState): GameState => ({
+  ...state,
+  piece: {
+    ...state.piece,
+    pos: { ...state.piece.pos, x: state.piece.pos.x + 1 }
+  }
+});
 
-  return atRight(state.piece) || didCollide(newState) ? state : newState;
-};
-
-const decrementXPos = (state: GameState): GameState => {
-  const newState = {
-    ...state,
-    piece: {
-      ...state.piece,
-      pos: { ...state.piece.pos, x: state.piece.pos.x - 1 }
-    }
-  };
-
-  return atLeft(state.piece) || didCollide(newState) ? state : newState;
-};
+const decrementXPos = (state: GameState): GameState => ({
+  ...state,
+  piece: {
+    ...state.piece,
+    pos: { ...state.piece.pos, x: state.piece.pos.x - 1 }
+  }
+});
 
 export const runningReducer: GameReducer = (state, { type }) =>
   type === GameActions.startGame
     ? startTransform()
-    : type === GameActions.moveDown
+    : type === GameActions.moveDown && !collide(state, incrementYPos)
     ? incrementYPos(state)
-    : type === GameActions.moveRight
+    : type === GameActions.moveRight && !collide(state, incrementXPos)
     ? incrementXPos(state)
-    : type === GameActions.moveLeft
+    : type === GameActions.moveLeft && !collide(state, decrementXPos)
     ? decrementXPos(state)
+    : (type === GameActions.moveDown || type === GameActions.gameCycle) &&
+      collide(state, incrementYPos)
+    ? endTurnTransform(state)
     : type === GameActions.pauseGame
     ? pauseTransform(state)
     : type === GameActions.gameCycle
