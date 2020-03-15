@@ -35,11 +35,26 @@ export type GameFieldState = {
   gravity: number;
 };
 
+export type FullState = BaseState & ScoreState & GameFieldState;
+
+export type CompletedState = FullState & {
+  completed: {
+    lines: number[];
+    cycleCount: number;
+  };
+};
+
 export type GameActionTypes =
   | { type: GameActions }
   | { type: GameActions.incrementScore; value: number };
 
-export type GameState = BaseState & ScoreState & GameFieldState;
+export type GameState = FullState | CompletedState;
+
+export const isCompletedState = (
+  state: FullState | CompletedState
+): state is CompletedState => (state as CompletedState).completed !== undefined;
+
+export type GameTransform = (state: GameState) => GameState;
 
 export type GameReducer = (
   state: GameState,

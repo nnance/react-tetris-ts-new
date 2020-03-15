@@ -10,6 +10,7 @@ import {
   DrawableGrid
 } from "../../components/drawing";
 import { endTurnTransform } from "./EndTurnState";
+import { pieceToBoardPiece, pickNewPiece } from "../GameActions";
 
 type BoundaryPredicate = (action: DrawableAction) => boolean;
 type StateTransform = (state: GameState) => GameState;
@@ -103,4 +104,11 @@ export const runningReducer: GameReducer = (state, { type }) =>
 export const runningTransform = (state: GameState): GameState => ({
   ...state,
   nextCycle: runningReducer
+});
+
+export const runningTransformNextPiece = (state: GameState): GameState => ({
+  ...state,
+  nextCycle: runningReducer,
+  piece: pieceToBoardPiece(state.next),
+  next: pickNewPiece()
 });
