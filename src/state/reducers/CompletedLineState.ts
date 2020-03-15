@@ -11,6 +11,7 @@ import {
 } from "../../components/drawing";
 import { GameRules, basicRules } from "../GameRules";
 import { runningTransformNextPiece } from "./RunningState";
+import { restartTransform } from "./StartState";
 
 const eraseLines = (
   fullRows: number[],
@@ -68,8 +69,9 @@ const highlightLines = (
 
 export const completedLineReducer: GameReducer = (state, { type }) => {
   const completedState = state as CompletedState;
-  return type === GameActions.gameCycle &&
-    completedState.completed.cycleCount > 0
+  return type === GameActions.startGame
+    ? restartTransform()
+    : type === GameActions.gameCycle && completedState.completed.cycleCount > 0
     ? decrementTetrisCycle(completedState)
     : endTetrisCycle(basicRules, completedState);
 };

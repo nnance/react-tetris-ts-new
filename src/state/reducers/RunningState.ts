@@ -1,6 +1,10 @@
 import { GameReducer, GameActions, GameState } from "../../types";
 import { pauseTransform } from "./PausedState";
-import { startTransform, pieceToBoardPiece, pickNewPiece } from "./StartState";
+import {
+  pieceToBoardPiece,
+  pickNewPiece,
+  restartTransform
+} from "./StartState";
 import {
   BoardPiece,
   DrawableAction,
@@ -82,7 +86,7 @@ const rotatePiece = (state: GameState): GameState => ({
 
 export const runningReducer: GameReducer = (state, { type }) =>
   type === GameActions.startGame
-    ? startTransform()
+    ? restartTransform()
     : type === GameActions.moveDown && !collide(state, incrementYPos)
     ? incrementYPos(state)
     : type === GameActions.moveRight && !collide(state, incrementXPos)
