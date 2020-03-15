@@ -1,12 +1,18 @@
 import React from "react";
 import "./animation.css";
-import { BlockState, BoardPiece, drawBlock, DrawableAction } from "./drawing";
-import { updateBoard } from "../state/GameActions";
+import {
+  BlockState,
+  BoardPiece,
+  drawBlock,
+  DrawableAction,
+  BoardDrawer
+} from "./drawing";
 
 type PlayFieldProps = {
   started: boolean;
   piece: BoardPiece;
   boardLines: DrawableAction[];
+  board: BoardDrawer;
 };
 
 type CellStyle = { style: React.CSSProperties; testID: string };
@@ -41,18 +47,19 @@ const getStyle = (block: BlockState): CellStyle =>
 const PlayField: React.FC<PlayFieldProps> = ({
   piece,
   started,
-  boardLines
+  boardLines,
+  board
 }) => {
   const lines = !started
     ? []
     : drawBlock(piece.pos.x, piece.pos.y, piece.drawer).concat(boardLines);
-  const board = updateBoard(lines);
+  const grid = board(lines);
 
   return (
     <div className="col-md-4 col-8">
       <table style={{ margin: "0px auto" }}>
         <tbody>
-          {board.map((row, rowIdx) => (
+          {grid.map((row, rowIdx) => (
             <tr key={`${row}-${rowIdx}`}>
               {row.map((block, idx) => (
                 <td

@@ -2,6 +2,7 @@ import { GameActions, GameReducer, GameState } from "./types";
 import { runningReducer } from "./RunningState";
 import { ScoreState, GameFieldState } from "./types";
 import { pickNewPiece, pieceToBoardPiece } from "../GameActions";
+import { drawBoard } from "../../components/drawing";
 
 export const initialState = (): ScoreState => ({
   score: 0,
@@ -12,6 +13,7 @@ export const initialState = (): ScoreState => ({
 export const gameFieldState = (): GameFieldState => ({
   piece: pieceToBoardPiece(pickNewPiece()),
   next: pickNewPiece(),
+  board: drawBoard(20, 10),
   lines: [],
   gravity: 500
 });

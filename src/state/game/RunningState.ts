@@ -6,15 +6,13 @@ import {
   DrawableAction,
   drawBlock,
   BlockState,
-  BlockDrawer
+  BlockDrawer,
+  DrawableGrid
 } from "../../components/drawing";
-import { updateBoard } from "../GameActions";
 import { endTurnTransform } from "./EndTurnState";
 
 type BoundaryPredicate = (action: DrawableAction) => boolean;
 type StateTransform = (state: GameState) => GameState;
-
-const emptyBoard = updateBoard([]);
 
 const drawPiece = (piece: BoardPiece): DrawableAction[] =>
   drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
@@ -24,26 +22,27 @@ const checkBoundary = (
   predicate: BoundaryPredicate
 ): boolean => drawPiece(piece).find(predicate) !== undefined;
 
-const atBottom = (action: DrawableAction): boolean =>
-  action.y >= emptyBoard.length;
+const atBottom = (action: DrawableAction, grid: DrawableGrid): boolean =>
+  action.y >= grid.length;
 
 const atLeft = (action: DrawableAction): boolean => action.x < 0;
 
-const atRight = (action: DrawableAction): boolean =>
-  action.x >= emptyBoard[0].length;
+const atRight = (action: DrawableAction, grid: DrawableGrid): boolean =>
+  action.x >= grid[0].length;
 
-const hitLine = (action: DrawableAction, lines: DrawableAction[]): boolean =>
-  updateBoard(lines)[action.y][action.x] === BlockState.on;
+const hitLine = (action: DrawableAction, grid: DrawableGrid): boolean =>
+  grid[action.y][action.x] === BlockState.on;
 
 const collide = (state: GameState, transform: StateTransform): boolean => {
-  const { lines, piece } = transform(state);
+  const { lines, piece, board } = transform(state);
+  const grid = board(lines);
   return checkBoundary(
     piece,
     action =>
       atLeft(action) ||
-      atRight(action) ||
-      atBottom(action) ||
-      hitLine(action, lines)
+      atRight(action, grid) ||
+      atBottom(action, grid) ||
+      hitLine(action, grid)
   );
 };
 

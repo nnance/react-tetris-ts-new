@@ -42,8 +42,10 @@ export const drawBlock = (
   return drawer(x, y, BlockState.on);
 };
 
-export const drawBoard = (height: number, width: number) => (
-  actions: DrawableAction[]
+export type BoardDrawer = (actions: DrawableAction[]) => DrawableGrid;
+
+export const drawBoard = (height: number, width: number): BoardDrawer => (
+  actions
 ): DrawableGrid => {
   const grid: DrawableGrid = Array(height)
     .fill(BlockState.off)

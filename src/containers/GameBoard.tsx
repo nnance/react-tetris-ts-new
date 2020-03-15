@@ -20,6 +20,7 @@ const PlayFieldContainer: React.FC = () => {
       piece={game.piece}
       started={game.nextCycle !== startReducer}
       boardLines={game.lines}
+      board={game.board}
     />
   );
 };
