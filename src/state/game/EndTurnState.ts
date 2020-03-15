@@ -5,6 +5,7 @@ import {
   BlockState
 } from "../../components/drawing";
 import { pieceToBoardPiece, pickNewPiece } from "../GameActions";
+import { runningTransform } from "./RunningState";
 
 const findFullRows = (actions: DrawableAction[]): number[] =>
   actions
@@ -42,12 +43,12 @@ const endPieceMovement = (state: GameState): GameState => {
         lines: highlightLines(fullRows, lines)
         // tetrisLines: fullRows
       }
-    : {
+    : runningTransform({
         ...state,
         piece: pieceToBoardPiece(state.next),
         next: pickNewPiece(),
         lines
-      };
+      });
 };
 
 export const endTurnReducer: GameReducer = (state, { type }) =>

@@ -28,15 +28,11 @@ describe("when game is running", () => {
       const newState = { ...startState, lines: drawBlock(0, 2, IBlock[1]) };
       expect(runningReducer(newState, moveDown()).piece.pos.y).toBe(0);
     });
-    it("should be at the bottom if it collides", () => {
-      const newState = runningReducer(
-        {
-          ...startState,
-          lines: drawBlock(0, 2, IBlock[1])
-        },
-        moveDown()
+    it("should transition to end turn when it collides at the bottom", () => {
+      const newState = { ...startState, lines: drawBlock(0, 2, IBlock[1]) };
+      expect(runningReducer(newState, moveDown()).nextCycle).toEqual(
+        endTurnReducer
       );
-      expect(newState.nextCycle).toEqual(endTurnReducer);
     });
   });
 

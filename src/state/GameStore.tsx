@@ -12,11 +12,13 @@ const initState: GameState = {
   ...gameFieldState()
 };
 
-const gameReducer = (state: GameState, action: GameActionTypes): GameState =>
-  state.nextCycle(state, action);
-
 const initDispatcher = (action: GameActionTypes): GameState => initState;
 const GameStore = React.createContext<GameStore>([initState, initDispatcher]);
+
+export const gameReducer = (
+  state: GameState,
+  action: GameActionTypes
+): GameState => state.nextCycle(state, action);
 
 export const GameProvider: React.FC = ({ children }) => {
   const [state, dispatch] = React.useReducer(gameReducer, initState);
