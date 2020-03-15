@@ -1,5 +1,5 @@
 import { pausedReducer } from "./PausedState";
-import { startGame } from "./actions";
+import { startGame } from "../actions";
 import { runningReducer } from "./RunningState";
 import { startState } from "./testingHelpers";
 

@@ -3,8 +3,8 @@ import { drawBlock } from "../../components/drawing";
 import { startState, triggerReducer } from "./testingHelpers";
 import { runningReducer } from "./RunningState";
 import { completedLineTransform } from "./CompletedLineState";
-import { gameCycle } from "./actions";
-import { GameState } from "./types";
+import { gameCycle } from "../actions";
+import { GameState } from "../../types";
 
 const cycleTrigger = (state: GameState): GameState =>
   triggerReducer(state, gameCycle, 2);

@@ -1,29 +1,62 @@
-import React from "react";
-import { BoardPiece, Piece, DrawableAction } from "../components/drawing";
+import {
+  BoardPiece,
+  Piece,
+  DrawableAction,
+  BoardDrawer
+} from "../components/drawing";
 
-export type GameState = {
+export enum GameActions {
+  incrementScore,
+  pauseGame,
+  resumeGame,
+  startGame,
+  moveDown,
+  moveRight,
+  moveLeft,
+  rotatePiece,
+  gameCycle
+}
+
+export type BaseState = {
+  nextCycle: GameReducer;
+};
+
+export type ScoreState = {
+  score: number;
+  level: number;
+  lineCount: number;
+};
+
+export type GameFieldState = {
   piece: BoardPiece;
   next: Piece;
-  score: number;
-  lineCount: number;
-  level: number;
-  paused: boolean;
-  started: boolean;
-  tetrisLines: number[];
-  tetrisCycle: number;
+  board: BoardDrawer;
   lines: DrawableAction[];
   gravity: number;
 };
 
-export type GameActions = {
-  incrementScore: (value: number) => void;
-  pauseGame: () => void;
-  resumeGame: () => void;
-  startGame: () => void;
-  moveDown: () => void;
-  moveRight: () => void;
-  moveLeft: () => void;
-  rotatePiece: () => void;
+export type FullState = BaseState & ScoreState & GameFieldState;
+
+export type CompletedState = FullState & {
+  completed: {
+    lines: number[];
+    cycleCount: number;
+  };
 };
 
-export type GameStateSetter = React.Dispatch<React.SetStateAction<GameState>>;
+export type GameActionTypes =
+  | { type: GameActions }
+  | { type: GameActions.incrementScore; value: number };
+
+export type GameState = FullState | CompletedState;
+
+export const isCompletedState = (
+  state: FullState | CompletedState
+): state is CompletedState => (state as CompletedState).completed !== undefined;
+
+export type GameTransform = (state: GameState) => GameState;
+
+export type GameReducer = (
+  state: GameState,
+  action: GameActionTypes
+) => GameState;

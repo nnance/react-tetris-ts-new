@@ -8,9 +8,9 @@ import NextPiece from "../components/NextPiece";
 import useTheme from "../hooks/useTheme";
 import useGameControls from "../hooks/useGameControls";
 import useFPS from "../hooks/useFPS";
-import { startGame, pauseGame, resumeGame } from "../state/game/actions";
-import { pausedReducer } from "../state/game/PausedState";
-import { startReducer } from "../state/game/StartState";
+import { startGame, pauseGame, resumeGame } from "../state/actions";
+import { pausedReducer } from "../state/reducers/PausedState";
+import { startReducer } from "../state/reducers/StartState";
 
 const PlayFieldContainer: React.FC = () => {
   const [game] = React.useContext(GameStore);

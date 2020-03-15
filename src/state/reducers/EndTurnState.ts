@@ -1,4 +1,4 @@
-import { GameReducer, GameState, GameActions } from "./types";
+import { GameReducer, GameState, GameActions } from "../../types";
 import { DrawableAction, drawBlock } from "../../components/drawing";
 import { runningTransformNextPiece } from "./RunningState";
 import { completedLineTransform } from "./CompletedLineState";

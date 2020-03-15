@@ -1,4 +1,4 @@
-import { startGame } from "./actions";
+import { startGame } from "../actions";
 import { startReducer } from "./StartState";
 import { startState } from "./testingHelpers";
 

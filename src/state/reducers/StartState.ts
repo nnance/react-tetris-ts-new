@@ -1,8 +1,25 @@
-import { GameActions, GameReducer, GameState } from "./types";
+import {
+  GameActions,
+  GameReducer,
+  GameState,
+  ScoreState,
+  GameFieldState
+} from "../../types";
 import { runningReducer } from "./RunningState";
-import { ScoreState, GameFieldState } from "./types";
-import { pickNewPiece, pieceToBoardPiece } from "../GameActions";
-import { drawBoard } from "../../components/drawing";
+import { drawBoard, Piece, BoardPiece } from "../../components/drawing";
+import { blocks } from "../../components/blocks";
+
+export const pieceToBoardPiece = (piece: Piece): BoardPiece => ({
+  pos: { x: 1, y: 0 },
+  piece,
+  isAtBottom: false,
+  drawer: piece[0]
+});
+
+export const pickNewPiece = (): Piece => {
+  const pieceIndex = Math.floor(Math.random() * blocks.length);
+  return blocks[pieceIndex];
+};
 
 export const initialState = (): ScoreState => ({
   score: 0,

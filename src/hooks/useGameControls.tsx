@@ -1,12 +1,7 @@
 import React from "react";
 import GameStore from "../state/GameStore";
-import { GameActionTypes } from "../state/game/types";
-import {
-  moveRight,
-  moveLeft,
-  moveDown,
-  rotatePiece
-} from "../state/game/actions";
+import { GameActionTypes } from "../types";
+import { moveRight, moveLeft, moveDown, rotatePiece } from "../state/actions";
 
 enum KeyCode {
   spaceBar = 32,

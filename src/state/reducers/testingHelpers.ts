@@ -1,9 +1,8 @@
-import { GameState, GameActionTypes } from "./types";
+import { GameState, GameActionTypes } from "../../types";
 import { runningReducer } from "./RunningState";
-import { initialState, gameFieldState } from "./StartState";
-import { pieceToBoardPiece } from "../GameActions";
+import { initialState, gameFieldState, pieceToBoardPiece } from "./StartState";
 import { OBlock } from "../../components/blocks";
-import { moveLeft, moveRight, moveDown, gameCycle } from "./actions";
+import { moveLeft, moveRight, moveDown, gameCycle } from "../actions";
 
 const moveTimes = (count: number, movement: () => GameActionTypes) => (
   state: GameState

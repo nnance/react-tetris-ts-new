@@ -1,6 +1,6 @@
-import { GameReducer, GameActions, GameState } from "./types";
+import { GameReducer, GameActions, GameState } from "../../types";
 import { pauseTransform } from "./PausedState";
-import { startTransform } from "./StartState";
+import { startTransform, pieceToBoardPiece, pickNewPiece } from "./StartState";
 import {
   BoardPiece,
   DrawableAction,
@@ -10,7 +10,6 @@ import {
   DrawableGrid
 } from "../../components/drawing";
 import { endTurnTransform } from "./EndTurnState";
-import { pieceToBoardPiece, pickNewPiece } from "../GameActions";
 
 type BoundaryPredicate = (action: DrawableAction) => boolean;
 type StateTransform = (state: GameState) => GameState;

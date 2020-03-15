@@ -1,5 +1,5 @@
 import { OBlock, IBlock } from "../../components/blocks";
-import { gameCycle } from "./actions";
+import { gameCycle } from "../actions";
 import { drawBlock, DrawableAction } from "../../components/drawing";
 import { endTurnReducer } from "./EndTurnState";
 import { startState, moveDown25Times } from "./testingHelpers";

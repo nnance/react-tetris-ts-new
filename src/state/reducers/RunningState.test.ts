@@ -6,7 +6,7 @@ import {
   moveLeft,
   gameCycle,
   rotatePiece
-} from "./actions";
+} from "../actions";
 import { IBlock } from "../../components/blocks";
 import { drawBlock } from "../../components/drawing";
 import { endTurnReducer } from "./EndTurnState";
@@ -16,7 +16,7 @@ import {
   moveRight12Times,
   moveLeft6Times
 } from "./testingHelpers";
-import { pieceToBoardPiece } from "../GameActions";
+import { pieceToBoardPiece } from "./StartState";
 
 describe("when game is running", () => {
   it("should reset game on start game", () => {

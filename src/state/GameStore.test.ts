@@ -1,9 +1,9 @@
-import { startState, gameCycle25Times } from "./game/testingHelpers";
+import { startState, gameCycle25Times } from "./reducers/testingHelpers";
 import { drawBlock } from "../components/drawing";
 import { IBlock } from "../components/blocks";
-import { gameCycle } from "./game/actions";
-import { runningReducer } from "./game/RunningState";
-import { endTurnReducer } from "./game/EndTurnState";
+import { gameCycle } from "./actions";
+import { runningReducer } from "./reducers/RunningState";
+import { endTurnReducer } from "./reducers/EndTurnState";
 
 describe("when the game is running", () => {
   it("should cycle through multiple states and pieces", () => {

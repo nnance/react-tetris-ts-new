@@ -1,4 +1,4 @@
-import { GameReducer, GameActions, GameState } from "./types";
+import { GameReducer, GameActions, GameState } from "../../types";
 import { runningTransform } from "./RunningState";
 import { startTransform } from "./StartState";
 

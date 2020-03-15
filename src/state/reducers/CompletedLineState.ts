@@ -1,4 +1,9 @@
-import { GameReducer, GameActions, GameState, CompletedState } from "./types";
+import {
+  GameReducer,
+  GameActions,
+  GameState,
+  CompletedState
+} from "../../types";
 import {
   DrawableAction,
   BlockState,

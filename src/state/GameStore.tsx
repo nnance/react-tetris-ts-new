@@ -1,8 +1,12 @@
 import React from "react";
-import { GameState, GameActionTypes } from "./game/types";
+import { GameState, GameActionTypes } from "../types";
 import useInterval from "../hooks/useInterval";
-import { gameCycle } from "./game/actions";
-import { startReducer, gameFieldState, initialState } from "./game/StartState";
+import { gameCycle } from "./actions";
+import {
+  startReducer,
+  gameFieldState,
+  initialState
+} from "./reducers/StartState";
 
 type GameStore = [GameState, React.Dispatch<GameActionTypes>];
 
@@ -12,7 +16,7 @@ const initState: GameState = {
   ...gameFieldState()
 };
 
-const initDispatcher = (action: GameActionTypes): GameState => initState;
+const initDispatcher = (): GameState => initState;
 const GameStore = React.createContext<GameStore>([initState, initDispatcher]);
 
 export const gameReducer = (
