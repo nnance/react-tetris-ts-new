@@ -5,12 +5,11 @@ import {
   BoardPiece,
   DrawableAction,
   drawBlock,
-  BlockState
+  BlockState,
+  BlockDrawer
 } from "../../components/drawing";
 import { updateBoard } from "../GameActions";
 import { endTurnTransform } from "./EndTurnState";
-
-// TODO: implement piece rotation
 
 type BoundaryPredicate = (action: DrawableAction) => boolean;
 type StateTransform = (state: GameState) => GameState;
@@ -33,10 +32,8 @@ const atLeft = (action: DrawableAction): boolean => action.x < 0;
 const atRight = (action: DrawableAction): boolean =>
   action.x >= emptyBoard[0].length;
 
-const hitLine = (action: DrawableAction, lines: DrawableAction[]): boolean => {
-  const newBoard = updateBoard(lines);
-  return newBoard[action.y][action.x] === BlockState.on;
-};
+const hitLine = (action: DrawableAction, lines: DrawableAction[]): boolean =>
+  updateBoard(lines)[action.y][action.x] === BlockState.on;
 
 const collide = (state: GameState, transform: StateTransform): boolean => {
   const { lines, piece } = transform(state);
@@ -74,6 +71,16 @@ const decrementXPos = (state: GameState): GameState => ({
   }
 });
 
+const getNewDrawer = (boarPiece: BoardPiece): BlockDrawer => {
+  const idx = boarPiece.piece.findIndex(drawer => drawer === boarPiece.drawer);
+  return boarPiece.piece[idx === boarPiece.piece.length - 1 ? 0 : idx + 1];
+};
+
+const rotatePiece = (state: GameState): GameState => ({
+  ...state,
+  piece: { ...state.piece, drawer: getNewDrawer(state.piece) }
+});
+
 export const runningReducer: GameReducer = (state, { type }) =>
   type === GameActions.startGame
     ? startTransform()
@@ -83,6 +90,8 @@ export const runningReducer: GameReducer = (state, { type }) =>
     ? incrementXPos(state)
     : type === GameActions.moveLeft && !collide(state, decrementXPos)
     ? decrementXPos(state)
+    : type === GameActions.rotatePiece && !collide(state, rotatePiece)
+    ? rotatePiece(state)
     : (type === GameActions.moveDown || type === GameActions.gameCycle) &&
       collide(state, incrementYPos)
     ? endTurnTransform(state)

@@ -1,7 +1,12 @@
 import React from "react";
 import GameStore from "../state/GameStore";
 import { GameActionTypes } from "../state/game/types";
-import { moveRight, moveLeft, moveDown } from "../state/game/actions";
+import {
+  moveRight,
+  moveLeft,
+  moveDown,
+  rotatePiece
+} from "../state/game/actions";
 
 enum KeyCode {
   spaceBar = 32,
@@ -16,7 +21,7 @@ const handler = (dispatch: React.Dispatch<GameActionTypes>) => ({
 }: KeyboardEvent): void => {
   if (keyCode === KeyCode.rightArrow) dispatch(moveRight());
   else if (keyCode === KeyCode.leftArrow) dispatch(moveLeft());
-  // else if (keyCode === KeyCode.upArrow) dispatch(rotatePiece());
+  else if (keyCode === KeyCode.upArrow) dispatch(rotatePiece());
   else if (keyCode === KeyCode.downArrow) dispatch(moveDown());
 };
 
