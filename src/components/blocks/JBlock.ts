@@ -1,4 +1,4 @@
-import { BlockState, DrawableAction, Piece } from "../drawing";
+import { BlockState, DrawableAction, Piece } from "../../types";
 
 const verticalBlock = (
   x: number,

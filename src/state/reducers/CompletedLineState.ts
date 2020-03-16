@@ -2,13 +2,11 @@ import {
   GameReducer,
   GameActions,
   GameState,
-  CompletedState
-} from "../../types";
-import {
+  CompletedState,
   DrawableAction,
-  BlockState,
-  drawBlock
-} from "../../components/drawing";
+  BlockState
+} from "../../types";
+import { drawBlock } from "../../components/drawing";
 import { GameRules, basicRules } from "../GameRules";
 import { runningTransformNextPiece } from "./RunningState";
 import { restartTransform } from "./StartState";

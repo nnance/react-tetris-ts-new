@@ -3,9 +3,11 @@ import {
   GameReducer,
   GameState,
   ScoreState,
-  GameFieldState
+  GameFieldState,
+  Piece,
+  BoardPiece
 } from "../../types";
-import { drawBoard, Piece, BoardPiece } from "../../components/drawing";
+import { drawBoard } from "../../components/drawing";
 import { blocks } from "../../components/blocks";
 import { runningTransform } from "./RunningState";
 

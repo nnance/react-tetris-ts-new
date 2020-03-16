@@ -1,5 +1,5 @@
 import React from "react";
-import { Piece } from "./drawing";
+import { Piece } from "../types";
 import PieceGrid from "./PieceGrid";
 
 type NextPieceProps = { piece: Piece };

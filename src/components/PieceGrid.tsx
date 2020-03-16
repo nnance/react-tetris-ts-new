@@ -1,5 +1,6 @@
 import React from "react";
-import { drawBoard, BlockState, BlockDrawer } from "./drawing";
+import { BlockState, BlockDrawer } from "../types";
+import { drawBoard } from "./drawing";
 
 type PieceGridProps = { drawer: BlockDrawer };
 

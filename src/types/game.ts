@@ -1,9 +1,4 @@
-import {
-  BoardPiece,
-  Piece,
-  DrawableAction,
-  BoardDrawer
-} from "../components/drawing";
+import { BoardPiece, Piece, DrawableAction, BoardDrawer } from "./drawing";
 
 export enum GameActions {
   incrementScore,

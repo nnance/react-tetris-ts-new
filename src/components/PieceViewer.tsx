@@ -11,7 +11,7 @@ import {
   TBlock,
   ZBlock
 } from "./blocks";
-import { Piece } from "./drawing";
+import { Piece } from "../types";
 
 type PieceViewerProps = {
   theme: React.CSSProperties;

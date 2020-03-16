@@ -1,12 +1,7 @@
 import React from "react";
 import "./animation.css";
-import {
-  BlockState,
-  BoardPiece,
-  drawBlock,
-  DrawableAction,
-  BoardDrawer
-} from "./drawing";
+import { BlockState, BoardPiece, DrawableAction, BoardDrawer } from "../types";
+import { drawBlock } from "./drawing";
 
 type PlayFieldProps = {
   started: boolean;

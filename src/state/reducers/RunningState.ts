@@ -1,18 +1,20 @@
-import { GameReducer, GameActions, GameState } from "../../types";
+import {
+  GameReducer,
+  GameActions,
+  GameState,
+  BoardPiece,
+  DrawableAction,
+  BlockState,
+  BlockDrawer,
+  DrawableGrid
+} from "../../types";
 import { pauseTransform } from "./PausedState";
 import {
   pieceToBoardPiece,
   pickNewPiece,
   restartTransform
 } from "./StartState";
-import {
-  BoardPiece,
-  DrawableAction,
-  drawBlock,
-  BlockState,
-  BlockDrawer,
-  DrawableGrid
-} from "../../components/drawing";
+import { drawBlock } from "../../components/drawing";
 import { endTurnTransform } from "./EndTurnState";
 
 type BoundaryPredicate = (action: DrawableAction) => boolean;

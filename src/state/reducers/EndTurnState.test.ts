@@ -1,9 +1,10 @@
 import { OBlock, IBlock } from "../../components/blocks";
 import { gameCycle } from "../actions";
-import { drawBlock, DrawableAction } from "../../components/drawing";
+import { drawBlock } from "../../components/drawing";
 import { endTurnReducer } from "./EndTurnState";
 import { startState, moveDown25Times } from "./testingHelpers";
 import { completedLineReducer } from "./CompletedLineState";
+import { DrawableAction } from "../../types";
 
 describe("when turn is over", () => {
   const state = moveDown25Times({
