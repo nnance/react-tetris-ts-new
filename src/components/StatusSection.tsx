@@ -23,6 +23,8 @@ const StatusSection: React.FC<StatusProps> = props => {
       <br />
       <br />
       <br />
+      <br />
+      <br />
       <Controls />
       <section style={{ position: "relative", right: "20px" }}>
         {props.message}
