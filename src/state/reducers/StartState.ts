@@ -10,6 +10,7 @@ import {
 import { drawBoard } from "../../components/drawing";
 import { blocks } from "../../components/blocks";
 import { runningTransform } from "./RunningState";
+import { basicRules } from "../GameRules";
 
 const initialState = (): ScoreState => ({
   score: 0,
@@ -37,11 +38,25 @@ export const pickNewPiece = (): Piece => {
   return blocks[pieceIndex];
 };
 
-export const startTransform = (): GameState => ({
-  ...initialState(),
-  ...gameFieldState(),
-  nextCycle: startReducer
-});
+export const startTransform = (): GameState => {
+  const state = {
+    ...initialState(),
+    ...gameFieldState(),
+    nextCycle: startReducer
+  };
+
+  const newScore = basicRules(0, {
+    lineCount: state.lineCount,
+    level: state.level,
+    score: state.score,
+    gravity: state.gravity
+  });
+
+  return {
+    ...state,
+    ...newScore
+  };
+};
 
 export const restartTransform = (): GameState =>
   runningTransform(startTransform());

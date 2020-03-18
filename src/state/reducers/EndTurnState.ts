@@ -19,7 +19,7 @@ const findFullRows = (actions: DrawableAction[]): number[] =>
       [] as number[]
     );
 
-const endPieceMovement = (state: GameState): GameState => {
+export const endTurnTransform = (state: GameState): GameState => {
   const { piece } = state;
   const actions = drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
   const lines = state.lines.concat(actions);
@@ -34,9 +34,4 @@ const endPieceMovement = (state: GameState): GameState => {
 };
 
 export const endTurnReducer: GameReducer = (state, { type }) =>
-  type === GameActions.gameCycle ? endPieceMovement(state) : state;
-
-export const endTurnTransform = (state: GameState): GameState => ({
-  ...state,
-  nextCycle: endTurnReducer
-});
+  type === GameActions.gameCycle ? endTurnTransform(state) : state;

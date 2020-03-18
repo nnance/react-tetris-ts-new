@@ -1,19 +1,17 @@
-import { startState, gameCycle25Times } from "./reducers/testingHelpers";
+import { startState, triggerReducer } from "./reducers/testingHelpers";
 import { drawBlock } from "../components/drawing";
 import { IBlock } from "../components/blocks";
 import { gameCycle } from "./actions";
 import { runningReducer } from "./reducers/RunningState";
-import { endTurnReducer } from "./reducers/EndTurnState";
 
 describe("when the game is running", () => {
   it("should cycle through multiple states and pieces", () => {
     const state = { ...startState, lines: drawBlock(0, 19, IBlock[1]) };
-    const endState = gameCycle25Times(state);
-    const newPieceState = endState.nextCycle(endState, gameCycle());
-    expect(newPieceState.nextCycle).toEqual(runningReducer);
+    const endState = triggerReducer(state, gameCycle, 18);
+    expect(endState.piece.pos.y).toEqual(0);
 
-    const nextPieceState = gameCycle25Times(newPieceState);
-    expect(nextPieceState.nextCycle).toEqual(endTurnReducer);
-    expect(nextPieceState.piece.pos.y).toEqual(15);
+    const nextPieceState = triggerReducer(endState, gameCycle, 16);
+    expect(nextPieceState.nextCycle).toEqual(runningReducer);
+    expect(nextPieceState.piece.pos.y).toEqual(0);
   });
 });

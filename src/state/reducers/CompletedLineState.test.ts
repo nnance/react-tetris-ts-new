@@ -1,4 +1,4 @@
-import { OBlock, IBlock } from "../../components/blocks";
+import { IBlock } from "../../components/blocks";
 import { drawBlock } from "../../components/drawing";
 import { startState, triggerReducer } from "./testingHelpers";
 import { runningReducer } from "./RunningState";
@@ -22,7 +22,7 @@ const state = completedLineTransform(
 
 describe("when completed state is cycling", () => {
   it("should pick a new piece when the cycle is over", () => {
-    expect(cycleTrigger(state).next).not.toEqual(OBlock);
+    expect(cycleTrigger(state).piece.pos.y).toEqual(0);
   });
   it("should transition to running state when cycle is over", () => {
     expect(cycleTrigger(state).nextCycle).toEqual(runningReducer);

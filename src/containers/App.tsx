@@ -2,10 +2,8 @@ import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import ThemeStore from "../state/ThemeStore";
-import useTheme from "../hooks/useTheme";
 
 const App: React.FC = () => {
-  useTheme();
   return (
     <ThemeStore.Consumer>
       {([theme]): React.ReactElement => (

@@ -9,12 +9,11 @@ import {
 } from "../actions";
 import { IBlock } from "../../components/blocks";
 import { drawBlock } from "../../components/drawing";
-import { endTurnReducer } from "./EndTurnState";
 import {
   startState,
-  moveDown25Times,
   moveRight12Times,
-  moveLeft6Times
+  moveLeft6Times,
+  triggerReducer
 } from "./testingHelpers";
 import { pieceToBoardPiece } from "./StartState";
 
@@ -49,16 +48,16 @@ describe("when game is running", () => {
       expect(runningReducer(startState, moveDown()).piece.pos.y).toEqual(1);
     });
     it("should stop at the bottom", () => {
-      expect(moveDown25Times(startState).piece.pos.y).toEqual(18);
+      expect(triggerReducer(startState, moveDown, 19).piece.pos.y).toEqual(0);
     });
     it("should stop when it collides", () => {
       const state = { ...startState, lines: drawBlock(0, 2, IBlock[1]) };
       expect(runningReducer(state, moveDown()).piece.pos.y).toEqual(0);
     });
-    it("should transition to end turn when it collides at the bottom", () => {
+    it("should transition to running turn when it collides at the bottom", () => {
       const state = { ...startState, lines: drawBlock(0, 2, IBlock[1]) };
       expect(runningReducer(state, moveDown()).nextCycle).toEqual(
-        endTurnReducer
+        runningReducer
       );
     });
   });

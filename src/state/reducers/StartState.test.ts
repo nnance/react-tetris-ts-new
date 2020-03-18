@@ -9,4 +9,7 @@ describe("when creating a new game", () => {
       runningReducer
     );
   });
+  it("should reset to the basic rules starting state", () => {
+    expect(startReducer(startState, startGame()).gravity).toEqual(1000);
+  });
 });
