@@ -29,7 +29,6 @@ const gameFieldState = (): GameFieldState => ({
 export const pieceToBoardPiece = (piece: Piece): BoardPiece => ({
   pos: { x: 1, y: 0 },
   piece,
-  isAtBottom: false,
   drawer: piece[0]
 });
 
