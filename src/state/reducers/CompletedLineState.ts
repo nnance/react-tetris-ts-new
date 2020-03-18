@@ -1,10 +1,10 @@
 import {
-  GameReducer,
   GameActions,
   GameState,
   CompletedState,
   DrawableAction,
-  BlockState
+  BlockState,
+  GameReducer
 } from "../../types";
 import { drawBlock } from "../../components/drawing";
 import { GameRules, basicRules } from "../GameRules";
@@ -66,12 +66,15 @@ const highlightLines = (
   }, [] as DrawableAction[]);
 
 export const completedLineReducer: GameReducer = (state, { type }) => {
-  const completedState = state as CompletedState;
+  const completeState = state as CompletedState;
+  const { completed } = completeState;
   return type === GameActions.startGame
     ? restartTransform()
-    : type === GameActions.gameCycle && completedState.completed.cycleCount > 0
-    ? decrementTetrisCycle(completedState)
-    : endTetrisCycle(basicRules, completedState);
+    : type === GameActions.gameCycle && completed.cycleCount > 0
+    ? decrementTetrisCycle(completeState)
+    : type === GameActions.gameCycle && completed.cycleCount === 0
+    ? endTetrisCycle(basicRules, completeState)
+    : state;
 };
 
 export const completedLineTransform = (
