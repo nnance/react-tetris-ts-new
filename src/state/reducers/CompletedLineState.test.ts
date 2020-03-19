@@ -11,7 +11,7 @@ const cycleTrigger = (state: GameState): GameState =>
 
 const state = completedLineTransform(
   {
-    ...startState,
+    ...startState(),
     lines: drawBlock(0, 19, IBlock[1]),
     score: 100,
     level: 3,

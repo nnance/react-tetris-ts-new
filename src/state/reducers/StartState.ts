@@ -3,13 +3,11 @@ import {
   GameReducer,
   GameState,
   ScoreState,
-  GameFieldState,
-  Piece,
-  BoardPiece
+  GameFieldState
 } from "../../types";
 import { drawBoard } from "../../components/drawing";
-import { blocks } from "../../components/blocks";
 import { runningTransform } from "./RunningState";
+import { initialPieceState } from "../PieceRules";
 import { basicRules } from "../GameRules";
 
 const initialState = (): ScoreState => ({
@@ -18,23 +16,13 @@ const initialState = (): ScoreState => ({
   lineCount: 0
 });
 
-const gameFieldState = (): GameFieldState => ({
-  piece: pieceToBoardPiece(pickNewPiece()),
-  next: pickNewPiece(),
-  board: drawBoard(20, 10),
-  lines: [],
-  gravity: 500
-});
-
-export const pieceToBoardPiece = (piece: Piece): BoardPiece => ({
-  pos: { x: 1, y: 0 },
-  piece,
-  drawer: piece[0]
-});
-
-export const pickNewPiece = (): Piece => {
-  const pieceIndex = Math.floor(Math.random() * blocks.length);
-  return blocks[pieceIndex];
+const gameFieldState = (): GameFieldState => {
+  return {
+    ...initialPieceState(),
+    board: drawBoard(20, 10),
+    lines: [],
+    gravity: 500
+  };
 };
 
 export const startTransform = (): GameState => {

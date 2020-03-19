@@ -1,7 +1,8 @@
-import { GameState, GameActionTypes } from "../../types";
-import { pieceToBoardPiece, startTransform } from "./StartState";
+import { GameState, GameActionTypes, Piece } from "../../types";
+import { startTransform } from "./StartState";
 import { OBlock } from "../../components/blocks";
 import { runningReducer } from "./RunningState";
+import { initialPieceState } from "../PieceRules";
 
 const moveTimes = (count: number, movement: () => GameActionTypes) => (
   state: GameState
@@ -20,10 +21,9 @@ type ReducerTrigger = (
 export const triggerReducer: ReducerTrigger = (state, movement, count = 1) =>
   moveTimes(count, movement)(state);
 
-export const startState: GameState = {
+export const startState = (piece?: Piece): GameState => ({
   ...startTransform(),
+  ...initialPieceState(piece || OBlock),
   nextCycle: runningReducer,
-  piece: pieceToBoardPiece(OBlock),
-  next: OBlock,
   level: 10
-};
+});

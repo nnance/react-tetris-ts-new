@@ -24,6 +24,7 @@ export type ScoreState = {
 
 export type GameFieldState = {
   piece: BoardPiece;
+  shadowPiece: BoardPiece;
   next: Piece;
   board: BoardDrawer;
   lines: DrawableAction[];

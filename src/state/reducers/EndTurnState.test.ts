@@ -7,7 +7,7 @@ import { runningReducer } from "./RunningState";
 
 describe("when turn is over", () => {
   it("should pick a new piece when it reaches the bottom", () => {
-    expect(triggerReducer(startState, moveDown, 19).piece.pos.y).toEqual(0);
+    expect(triggerReducer(startState(), moveDown, 19).piece.pos.y).toEqual(0);
   });
   it("should transition to completed line state when full line", () => {
     const lines: DrawableAction[] = Array(5)
@@ -16,7 +16,7 @@ describe("when turn is over", () => {
         prev.concat(drawBlock(idx * 2, 18, cur[0]), [] as DrawableAction[])
       );
     expect(
-      triggerReducer({ ...startState, lines }, gameCycle).nextCycle
+      triggerReducer({ ...startState(), lines }, gameCycle).nextCycle
     ).toEqual(runningReducer);
   });
 });
