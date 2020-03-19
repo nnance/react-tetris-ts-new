@@ -1,87 +1,15 @@
-import {
-  GameReducer,
-  GameActions,
-  GameState,
-  BoardPiece,
-  DrawableAction,
-  BlockState,
-  BlockDrawer,
-  DrawableGrid
-} from "../../types";
+import { GameReducer, GameActions, GameState } from "../../types";
 import { pauseTransform } from "./PausedState";
 import { restartTransform } from "./StartState";
-import { drawBlock } from "../../components/drawing";
 import { endTurnTransform } from "./EndTurnState";
-import { initialPieceState } from "../PieceRules";
-
-type BoundaryPredicate = (action: DrawableAction) => boolean;
-type StateTransform = (state: GameState) => GameState;
-
-const drawPiece = (piece: BoardPiece): DrawableAction[] =>
-  drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
-
-const checkBoundary = (
-  piece: BoardPiece,
-  predicate: BoundaryPredicate
-): boolean => drawPiece(piece).find(predicate) !== undefined;
-
-const atBottom = (action: DrawableAction, grid: DrawableGrid): boolean =>
-  action.y >= grid.length;
-
-const atLeft = (action: DrawableAction): boolean => action.x < 0;
-
-const atRight = (action: DrawableAction, grid: DrawableGrid): boolean =>
-  action.x >= grid[0].length;
-
-const hitLine = (action: DrawableAction, grid: DrawableGrid): boolean =>
-  grid[action.y][action.x] === BlockState.on;
-
-const collide = (state: GameState, transform: StateTransform): boolean => {
-  const { lines, piece, board } = transform(state);
-  const grid = board(lines);
-  return checkBoundary(
-    piece,
-    action =>
-      atLeft(action) ||
-      atRight(action, grid) ||
-      atBottom(action, grid) ||
-      hitLine(action, grid)
-  );
-};
-
-const incrementYPos = (state: GameState): GameState => ({
-  ...state,
-  piece: {
-    ...state.piece,
-    pos: { ...state.piece.pos, y: state.piece.pos.y + 1 }
-  }
-});
-
-const incrementXPos = (state: GameState): GameState => ({
-  ...state,
-  piece: {
-    ...state.piece,
-    pos: { ...state.piece.pos, x: state.piece.pos.x + 1 }
-  }
-});
-
-const decrementXPos = (state: GameState): GameState => ({
-  ...state,
-  piece: {
-    ...state.piece,
-    pos: { ...state.piece.pos, x: state.piece.pos.x - 1 }
-  }
-});
-
-const getNewDrawer = (boarPiece: BoardPiece): BlockDrawer => {
-  const idx = boarPiece.piece.findIndex(drawer => drawer === boarPiece.drawer);
-  return boarPiece.piece[idx === boarPiece.piece.length - 1 ? 0 : idx + 1];
-};
-
-const rotatePiece = (state: GameState): GameState => ({
-  ...state,
-  piece: { ...state.piece, drawer: getNewDrawer(state.piece) }
-});
+import {
+  initialPieceState,
+  collide,
+  incrementYPos,
+  incrementXPos,
+  decrementXPos,
+  rotatePiece
+} from "../PieceRules";
 
 export const runningReducer: GameReducer = (state, { type }) =>
   type === GameActions.startGame

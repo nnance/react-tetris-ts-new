@@ -1,4 +1,5 @@
-import { BoardPiece, Piece, DrawableAction, BoardDrawer } from "./drawing";
+import { DrawableAction, BoardDrawer } from "./drawing";
+import { GameBoardPiece } from "../state/PieceRules";
 
 export enum GameActions {
   incrementScore,
@@ -23,15 +24,15 @@ export type ScoreState = {
 };
 
 export type GameFieldState = {
-  piece: BoardPiece;
-  shadowPiece: BoardPiece;
-  next: Piece;
   board: BoardDrawer;
   lines: DrawableAction[];
   gravity: number;
 };
 
-export type FullState = BaseState & ScoreState & GameFieldState;
+export type FullState = BaseState &
+  ScoreState &
+  GameBoardPiece &
+  GameFieldState;
 
 export type CompletedState = FullState & {
   completed: {

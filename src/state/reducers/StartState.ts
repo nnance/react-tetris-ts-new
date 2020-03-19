@@ -28,6 +28,7 @@ const gameFieldState = (): GameFieldState => {
 export const startTransform = (): GameState => {
   const state = {
     ...initialState(),
+    ...initialPieceState(),
     ...gameFieldState(),
     nextCycle: startReducer
   };
