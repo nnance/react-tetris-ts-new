@@ -11,5 +11,5 @@ export const pausedReducer: GameReducer = (state, { type }) =>
 
 export const pauseTransform = (state: GameState): GameState => ({
   ...state,
-  nextCycle: pauseTransform
+  nextCycle: pausedReducer
 });
