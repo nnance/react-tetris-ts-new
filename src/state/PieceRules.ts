@@ -72,7 +72,7 @@ export const collide = (
 };
 
 const addShadowPiece = (state: GameState): GameState => {
-  const movements = Array(state.board([]).length).fill(incrementYPos);
+  const movements = Array(state.board([]).length).fill(transformYPos);
 
   const reducer = (cur: GameState, move: GameTransform): GameState =>
     collide(cur, move) ? cur : move(cur);
@@ -82,11 +82,7 @@ const addShadowPiece = (state: GameState): GameState => {
   return { ...state, shadowPiece: { ...newState.piece } };
 };
 
-export const withShadowPiece = (transform: GameTransform) => (
-  state: GameState
-): GameState => addShadowPiece(transform(state));
-
-export const incrementYPos: GameTransform = (state): GameState => ({
+const transformYPos: GameTransform = (state): GameState => ({
   ...state,
   piece: {
     ...state.piece,
@@ -94,26 +90,32 @@ export const incrementYPos: GameTransform = (state): GameState => ({
   }
 });
 
-export const incrementXPos = (state: GameState): GameState => ({
-  ...state,
-  piece: {
-    ...state.piece,
-    pos: { ...state.piece.pos, x: state.piece.pos.x + 1 }
-  }
-});
+export const incrementYPos: GameTransform = (state): GameState =>
+  addShadowPiece(transformYPos(state));
 
-export const decrementXPos = (state: GameState): GameState => ({
-  ...state,
-  piece: {
-    ...state.piece,
-    pos: { ...state.piece.pos, x: state.piece.pos.x - 1 }
-  }
-});
+export const incrementXPos = (state: GameState): GameState =>
+  addShadowPiece({
+    ...state,
+    piece: {
+      ...state.piece,
+      pos: { ...state.piece.pos, x: state.piece.pos.x + 1 }
+    }
+  });
 
-export const rotatePiece = (state: GameState): GameState => ({
-  ...state,
-  piece: { ...state.piece, drawer: getNewDrawer(state.piece) }
-});
+export const decrementXPos = (state: GameState): GameState =>
+  addShadowPiece({
+    ...state,
+    piece: {
+      ...state.piece,
+      pos: { ...state.piece.pos, x: state.piece.pos.x - 1 }
+    }
+  });
+
+export const rotatePiece = (state: GameState): GameState =>
+  addShadowPiece({
+    ...state,
+    piece: { ...state.piece, drawer: getNewDrawer(state.piece) }
+  });
 
 export const initialPieceState = (newPiece?: Piece): GameBoardPiece => {
   const piece = pieceToBoardPiece(newPiece || pickNewPiece());

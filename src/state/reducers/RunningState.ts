@@ -8,33 +8,27 @@ import {
   incrementXPos,
   decrementXPos,
   rotatePiece,
-  withShadowPiece,
   newPieceTransform
 } from "../PieceRules";
-
-const incYWithShadow = withShadowPiece(incrementYPos);
-const incXWithShadow = withShadowPiece(incrementXPos);
-const decXWithShadow = withShadowPiece(decrementXPos);
-const rotateXWithShadow = withShadowPiece(rotatePiece);
 
 export const runningReducer: GameReducer = (state, { type }) =>
   type === GameActions.startGame
     ? restartTransform()
     : type === GameActions.moveDown && !collide(state, incrementYPos)
-    ? incYWithShadow(state)
+    ? incrementYPos(state)
     : type === GameActions.moveRight && !collide(state, incrementXPos)
-    ? incXWithShadow(state)
+    ? incrementXPos(state)
     : type === GameActions.moveLeft && !collide(state, decrementXPos)
-    ? decXWithShadow(state)
+    ? decrementXPos(state)
     : type === GameActions.rotatePiece && !collide(state, rotatePiece)
-    ? rotateXWithShadow(state)
+    ? rotatePiece(state)
     : (type === GameActions.moveDown || type === GameActions.gameCycle) &&
       collide(state, incrementYPos)
     ? endTurnTransform(state)
     : type === GameActions.pauseGame
     ? pauseTransform(state)
     : type === GameActions.gameCycle
-    ? incYWithShadow(state)
+    ? incrementYPos(state)
     : state;
 
 export const runningTransform = (state: GameState): GameState => ({
