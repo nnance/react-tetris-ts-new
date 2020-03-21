@@ -7,7 +7,7 @@ import {
 } from "../../types";
 import { drawBoard } from "../../components/drawing";
 import { runningTransform } from "./RunningState";
-import { initialPieceState } from "../PieceRules";
+import { initialPieceState, newPieceTransform } from "../PieceRules";
 import { basicRules } from "../GameRules";
 
 const initialState = (): ScoreState => ({
@@ -26,12 +26,12 @@ const gameFieldState = (): GameFieldState => {
 };
 
 export const startTransform = (): GameState => {
-  const state = {
+  const state = newPieceTransform({
     ...initialState(),
     ...initialPieceState(),
     ...gameFieldState(),
     nextCycle: startReducer
-  };
+  });
 
   const newScore = basicRules(0, {
     lineCount: state.lineCount,

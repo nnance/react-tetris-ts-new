@@ -3,32 +3,38 @@ import { pauseTransform } from "./PausedState";
 import { restartTransform } from "./StartState";
 import { endTurnTransform } from "./EndTurnState";
 import {
-  initialPieceState,
   collide,
   incrementYPos,
   incrementXPos,
   decrementXPos,
-  rotatePiece
+  rotatePiece,
+  withShadowPiece,
+  newPieceTransform
 } from "../PieceRules";
+
+const incYWithShadow = withShadowPiece(incrementYPos);
+const incXWithShadow = withShadowPiece(incrementXPos);
+const decXWithShadow = withShadowPiece(decrementXPos);
+const rotateXWithShadow = withShadowPiece(rotatePiece);
 
 export const runningReducer: GameReducer = (state, { type }) =>
   type === GameActions.startGame
     ? restartTransform()
     : type === GameActions.moveDown && !collide(state, incrementYPos)
-    ? incrementYPos(state)
+    ? incYWithShadow(state)
     : type === GameActions.moveRight && !collide(state, incrementXPos)
-    ? incrementXPos(state)
+    ? incXWithShadow(state)
     : type === GameActions.moveLeft && !collide(state, decrementXPos)
-    ? decrementXPos(state)
+    ? decXWithShadow(state)
     : type === GameActions.rotatePiece && !collide(state, rotatePiece)
-    ? rotatePiece(state)
+    ? rotateXWithShadow(state)
     : (type === GameActions.moveDown || type === GameActions.gameCycle) &&
       collide(state, incrementYPos)
     ? endTurnTransform(state)
     : type === GameActions.pauseGame
     ? pauseTransform(state)
     : type === GameActions.gameCycle
-    ? incrementYPos(state)
+    ? incYWithShadow(state)
     : state;
 
 export const runningTransform = (state: GameState): GameState => ({
@@ -36,8 +42,8 @@ export const runningTransform = (state: GameState): GameState => ({
   nextCycle: runningReducer
 });
 
-export const runningTransformNextPiece = (state: GameState): GameState => ({
-  ...state,
-  ...initialPieceState(),
-  nextCycle: runningReducer
-});
+export const runningTransformNextPiece = (state: GameState): GameState =>
+  newPieceTransform({
+    ...state,
+    nextCycle: runningReducer
+  });

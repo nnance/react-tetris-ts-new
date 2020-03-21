@@ -5,7 +5,8 @@ import {
   GameState,
   DrawableGrid,
   BlockState,
-  BlockDrawer
+  BlockDrawer,
+  GameTransform
 } from "../types";
 import { blocks } from "../components/blocks";
 import { drawBlock } from "../components/drawing";
@@ -70,7 +71,22 @@ export const collide = (
   );
 };
 
-export const incrementYPos = (state: GameState): GameState => ({
+const addShadowPiece = (state: GameState): GameState => {
+  const movements = Array(state.board([]).length).fill(incrementYPos);
+
+  const reducer = (cur: GameState, move: GameTransform): GameState =>
+    collide(cur, move) ? cur : move(cur);
+
+  const newState = movements.reduce(reducer, state);
+
+  return { ...state, shadowPiece: { ...newState.piece } };
+};
+
+export const withShadowPiece = (transform: GameTransform) => (
+  state: GameState
+): GameState => addShadowPiece(transform(state));
+
+export const incrementYPos: GameTransform = (state): GameState => ({
   ...state,
   piece: {
     ...state.piece,
@@ -104,12 +120,12 @@ export const initialPieceState = (newPiece?: Piece): GameBoardPiece => {
   return { piece, shadowPiece: piece, next: pickNewPiece() };
 };
 
-export const newPieceTransform = (state: GameBoardPiece): GameBoardPiece => {
+export const newPieceTransform = (state: GameState): GameState => {
   const piece = state.next
     ? pieceToBoardPiece(state.next)
     : pieceToBoardPiece(pickNewPiece());
 
   const next = pickNewPiece();
 
-  return { ...state, piece, shadowPiece: piece, next };
+  return addShadowPiece({ ...state, piece, next });
 };

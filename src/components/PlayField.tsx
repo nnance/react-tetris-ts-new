@@ -6,6 +6,7 @@ import { drawBlock } from "./drawing";
 type PlayFieldProps = {
   started: boolean;
   piece: BoardPiece;
+  shadowPiece: BoardPiece;
   boardLines: DrawableAction[];
   board: BoardDrawer;
 };
@@ -24,6 +25,11 @@ export const PieceBlock = {
   backgroundColor: "blue"
 };
 
+export const ShadedBlock = {
+  ...Block,
+  backgroundColor: "grey"
+};
+
 export const EmptyBlock = {
   ...Block,
   backgroundColor: "white"
@@ -37,17 +43,22 @@ const getStyle = (block: BlockState): CellStyle =>
         style: { ...Block, animation: "blinking .25s infinite" },
         testID: "highlight"
       }
+    : block === BlockState.shaded
+    ? { style: ShadedBlock, testID: "shaded" }
     : { style: EmptyBlock, testID: "empty" };
 
 const PlayField: React.FC<PlayFieldProps> = ({
   piece,
+  shadowPiece,
   started,
   boardLines,
   board
 }) => {
-  const lines = !started
-    ? []
-    : drawBlock(piece.pos.x, piece.pos.y, piece.drawer).concat(boardLines);
+  const { pos, drawer } = shadowPiece;
+  const shadowBoard = drawBlock(pos.x, pos.y, drawer, BlockState.shaded);
+  const boardPiece = drawBlock(piece.pos.x, piece.pos.y, piece.drawer);
+
+  const lines = !started ? [] : boardLines.concat(shadowBoard, boardPiece);
   const grid = board(lines);
 
   return (

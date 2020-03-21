@@ -18,6 +18,7 @@ const PlayFieldContainer: React.FC = () => {
   return (
     <PlayField
       piece={game.piece}
+      shadowPiece={game.shadowPiece}
       started={game.nextCycle !== startReducer}
       boardLines={game.lines}
       board={game.board}

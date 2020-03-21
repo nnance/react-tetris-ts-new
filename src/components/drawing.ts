@@ -9,9 +9,10 @@ import {
 export const drawBlock = (
   x: number,
   y: number,
-  drawer: BlockDrawer
+  drawer: BlockDrawer,
+  state = BlockState.on
 ): DrawableAction[] => {
-  return drawer(x, y, BlockState.on);
+  return drawer(x, y, state);
 };
 
 export const drawBoard = (height: number, width: number): BoardDrawer => (
